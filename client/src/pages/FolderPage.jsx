@@ -1,7 +1,20 @@
-import React from "react";
-import ItemCard from "../components/ItemCard"; // Make sure to adjust the import path if needed
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import ItemCard from "../components/ItemCard";
+import Items from "../components/Items";
+import { useAuth } from "../context/AuthContext";
 
 export default function FolderPage() {
+  const { folderId } = useParams();
+  const { authFetch, user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Folders for sidebar
+  const [folders, setFolders] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const meshGradientStyle = {
     backgroundColor: "#f8f9fa",
     backgroundImage: `
@@ -12,36 +25,57 @@ export default function FolderPage() {
     `,
   };
 
-  // The custom code block for the Merge Sort split card
-  const mergeSortCodeNode = (
-    <div className="h-full bg-slate-900 rounded-xl p-4 font-mono text-[11px] text-slate-300 overflow-hidden border border-slate-800 shadow-2xl">
-      <div className="flex gap-2 mb-2 border-b border-slate-800 pb-2">
-        <span className="w-2.5 h-2.5 rounded-full bg-error/40"></span>
-        <span className="w-2.5 h-2.5 rounded-full bg-primary-fixed-dim/40"></span>
-        <span className="w-2.5 h-2.5 rounded-full bg-primary/40"></span>
-      </div>
-      <span className="text-indigo-400">function</span>{" "}
-      <span className="text-blue-300">mergeSort</span>(arr) {"{"}
-      <br />
-      {"  "}
-      <span className="text-indigo-400">if</span> (arr.length {"<="} 1){" "}
-      <span className="text-indigo-400">return</span> arr;
-      <br />
-      {"  "}
-      <span className="text-indigo-400">const</span> mid = Math.floor(arr.length / 2);
-      <br />
-      {"  "}
-      <span className="text-indigo-400">const</span> left = mergeSort(arr.slice(0, mid));
-      <br />
-      {"  "}
-      <span className="text-indigo-400">const</span> right = mergeSort(arr.slice(mid));
-      <br />
-      {"  "}
-      <span className="text-indigo-400">return</span> merge(left, right);
-      <br />
-      {"}"}
-    </div>
-  );
+  useEffect(() => {
+    const initData = async () => {
+      try {
+        setLoading(true);
+        // Fetch folders for sidebar
+        const fRes = await authFetch('/api/folders');
+        const fData = await fRes.json();
+        if (fData.success) {
+          setFolders(fData.data);
+        }
+
+        // Fetch items for current folder
+        if (folderId) {
+          const iRes = await authFetch(`/api/items?folderId=${folderId}`);
+          const iData = await iRes.json();
+          if (iData.success) {
+            setItems(iData.data);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    initData();
+  }, [folderId]);
+
+  const handleAddItem = async () => {
+    const content = window.prompt("Enter item content/title:");
+    if (!content) return;
+    const note = window.prompt("Enter description:");
+    
+    try {
+      const res = await authFetch('/api/items', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          content, 
+          note: note || "", 
+          type: "text", 
+          folderId 
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setItems([data.data, ...items]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div
@@ -59,29 +93,26 @@ export default function FolderPage() {
               DevLink
             </h1>
             <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">
-              Personal Workspace
+              {user?.username || 'Personal Workspace'}
             </p>
           </div>
         </div>
 
-        <nav className="flex-1 mt-6 flex flex-col gap-1">
-          <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
+        <nav className="flex-1 mt-6 flex flex-col gap-1 overflow-y-auto">
+          <Link className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" to="/dashboard">
             <span className="material-symbols-outlined">grid_view</span>
             <span className="text-sm font-medium">Dashboard</span>
-          </a>
-          {/* Active Navigation Pill */}
-          <a className="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out relative after:content-[''] after:absolute after:-left-4 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-4 after:bg-[#494bd6] after:rounded-r" href="#">
-            <span className="material-symbols-outlined">code</span>
-            <span className="text-sm font-medium">DSA</span>
-          </a>
-          <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-            <span className="material-symbols-outlined">description</span>
-            <span className="text-sm font-medium">Templates</span>
-          </a>
-          <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out" href="#">
-            <span className="material-symbols-outlined">auto_stories</span>
-            <span className="text-sm font-medium">Reading List</span>
-          </a>
+          </Link>
+          {folders.map(f => (
+            <Link 
+              key={f._id} 
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out ${f._id === folderId ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 relative after:content-[''] after:absolute after:-left-4 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-4 after:bg-[#494bd6] after:rounded-r" : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"}`} 
+              to={`/folder/${f._id}`}
+            >
+              <span className="material-symbols-outlined">folder</span>
+              <span className="text-sm font-medium truncate">{f.name}</span>
+            </Link>
+          ))}
           <div className="mt-8 px-3">
             <button className="w-full py-2.5 px-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-lg text-sm font-semibold shadow-md shadow-primary/10 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
               <span className="material-symbols-outlined text-sm">add</span>
@@ -166,7 +197,10 @@ export default function FolderPage() {
                 <span className="material-symbols-outlined text-lg">filter_list</span>
                 Filter
               </button>
-              <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              <button 
+                onClick={handleAddItem}
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
                 <span className="material-symbols-outlined text-lg">add_circle</span>
                 Add Item
               </button>
@@ -175,63 +209,22 @@ export default function FolderPage() {
 
           {/* Bento Grid of Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            {/* Card 1: BFS (Standard Text Card) */}
-            <ItemCard
-              icon="hub"
-              color="primary"
-              title="Breadth First Search"
-              description="An algorithm for traversing or searching tree or graph data structures. It starts at the tree root and explores all neighbor nodes..."
-              tags={["Graphs", "Queue"]}
-            />
-
-            {/* Card 2: Two Pointers (Standard Card with custom Code block injected via children) */}
-            <ItemCard
-              icon="swap_horiz"
-              color="tertiary"
-              title="Two Pointers"
-              tags={["Arrays", "Linear"]}
-            >
-              <div className="bg-surface-container-low rounded-lg p-3 mb-4 font-mono text-xs text-on-tertiary-fixed-variant border border-outline-variant/10 relative z-10">
-                <div className="flex gap-2">
-                  <span className="text-primary-dim">while</span>{" "}
-                  <span>(left {"<"} right) {"{"}</span>
-                </div>
-                <div className="pl-4 text-on-surface-variant/70">
-                  // logic here
-                </div>
-                <div>{"}"}</div>
-              </div>
-            </ItemCard>
-
-            {/* Card 3: Image Preview Card */}
-            <ItemCard
-              imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuAZNKHZiX9H49XqCu-kGE5Dnf-j-n4OHb_eKdnGcfQtmKU1U6jTCSC6jVrY5H1f3i6ld2CILqF1SISfOnCKRbnxcVTf834DvZJKfET59olGIkwSwpTJ9FrkbbTw6HmGaAJxKooqvjEvLELYlbsCpuKlTmG36g29zMp-HtR3sRf-UsbSjn6axwXhzGP37oZW-ZH5HzDASVTtAJU8-csz93I5Mw5jMPJV8SS1qPB8ch2uj6I8HuHONbg9PuHQd-l7ThvcVKafhauuMA"
-              title="Dynamic Programming"
-              description="A method for solving complex problems by breaking them down into simpler subproblems."
-              tags={["Optimization"]}
-            />
-
-            {/* Card 4: Sliding Window */}
-            <ItemCard
-              icon="border_all"
-              color="secondary"
-              title="Sliding Window"
-              description="Technique for finding subarrays in an array that satisfy given conditions, optimizing from O(n²) to O(n)."
-              tags={["Arrays", "Strings"]}
-            />
-
-            {/* Card 5: Merge Sort (Wide Card using the splitNode prop) */}
-            <ItemCard
-              className="lg:col-span-2"
-              icon="sort"
-              color="primary"
-              title="Merge Sort Implementation"
-              description="Divide and conquer algorithm that was invented by John von Neumann in 1945. Most stable sorting algorithm for large datasets."
-              tags={["Divide & Conquer", "Sorting"]}
-              splitNode={mergeSortCodeNode}
-            />
-
+            {loading ? (
+              <p className="col-span-3 text-center text-slate-500 py-10">Loading items...</p>
+            ) : items.length === 0 ? (
+               <p className="col-span-3 text-center text-slate-500 py-10">No items found in this folder.</p>
+            ) : items.map((item, idx) => (
+              <ItemCard
+                key={item._id}
+                icon={item.type === 'link' ? "link" : item.type === 'image' ? "image" : "description"}
+                color={idx % 3 === 0 ? "primary" : idx % 3 === 1 ? "secondary" : "tertiary"}
+                title={item.content}
+                description={item.note || ""}
+                tags={item.tags || []}
+                imageSrc={item.type === 'image' ? item.sourceUrl : null}
+                onClick={() => setSelectedItem(item)}
+              />
+            ))}
           </div>
         </section>
 
@@ -243,23 +236,32 @@ export default function FolderPage() {
 
       {/* Mobile Navigation Shell */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 flex justify-around items-center py-3 z-50">
-        <a className="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+        <Link className="flex flex-col items-center gap-1 text-on-surface-variant" to="/dashboard">
           <span className="material-symbols-outlined text-2xl">grid_view</span>
           <span className="text-[10px] font-medium">Dashboard</span>
-        </a>
-        <a className="flex flex-col items-center gap-1 text-primary" href="#">
-          <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>code</span>
-          <span className="text-[10px] font-bold">DSA</span>
-        </a>
-        <a className="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
-          <span className="material-symbols-outlined text-2xl">description</span>
-          <span className="text-[10px] font-medium">Templates</span>
-        </a>
-        <a className="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
-          <span className="material-symbols-outlined text-2xl">person</span>
-          <span className="text-[10px] font-medium">Profile</span>
-        </a>
+        </Link>
+        <div className="flex flex-col items-center gap-1 text-primary relative -top-6">
+          <button onClick={handleAddItem} className="w-12 h-12 bg-primary text-white rounded-full shadow-lg shadow-primary/30 flex items-center justify-center transform transition-transform active:scale-90">
+            <span className="material-symbols-outlined text-3xl">add</span>
+          </button>
+        </div>
+        <button onClick={logout} className="flex flex-col items-center gap-1 text-on-surface-variant">
+          <span className="material-symbols-outlined text-2xl">logout</span>
+          <span className="text-[10px] font-medium">Logout</span>
+        </button>
       </nav>
+
+      {/* Render Items Modal if an item is selected */}
+      <Items 
+        isOpen={!!selectedItem} 
+        onClose={() => setSelectedItem(null)} 
+        item={selectedItem} 
+        onItemDeleted={(id) => {
+          setItems(items.filter(i => i._id !== id));
+          setSelectedItem(null);
+        }}
+        authFetch={authFetch}
+      />
     </div>
   );
 }

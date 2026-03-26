@@ -1,8 +1,42 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  const { login, register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    if (isLogin) {
+      const res = await login(email, password);
+      if (res.success) {
+        navigate("/dashboard");
+      } else {
+        setError(res.error);
+      }
+    } else {
+      const res = await register(email, password, username);
+      if (res.success) {
+        setIsLogin(true); // Switch to login after successful register
+        setError("Registration successful! Please login.");
+      } else {
+        setError(res.error);
+      }
+    }
+    setLoading(false);
+  };
 
   // Custom inline styles converted from your CSS
   const architecturalGridStyle = {
@@ -127,7 +161,34 @@ export default function AuthPage() {
           </div>
 
           {/* Auth Form */}
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4">
+                {error}
+              </div>
+            )}
+            
+            {!isLogin && (
+              <div className="space-y-1.5 relative">
+                <label className="text-xs font-bold tracking-widest uppercase text-on-surface-variant ml-1">
+                  Username
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">
+                    person
+                  </span>
+                  <input
+                    className="w-full bg-surface-container-low border-0 rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                    placeholder="johndoe"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required={!isLogin}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-1.5 relative">
               <label className="text-xs font-bold tracking-widest uppercase text-on-surface-variant ml-1">
                 Email Address
@@ -140,6 +201,8 @@ export default function AuthPage() {
                   className="w-full bg-surface-container-low border-0 rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
                   placeholder="name@company.com"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -167,6 +230,8 @@ export default function AuthPage() {
                   className="w-full bg-surface-container-low border-0 rounded-xl py-4 pl-12 pr-12 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
                   placeholder="••••••••"
                   type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
@@ -196,10 +261,11 @@ export default function AuthPage() {
             </div>
 
             <button
-              className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dim hover:-translate-y-0.5 transition-all duration-300"
+              disabled={loading}
+              className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dim hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:hover:-translate-y-0"
               type="submit"
             >
-              {isLogin ? "Sign In to DevLink" : "Create Account"}
+              {loading ? "Please wait..." : (isLogin ? "Sign In to DevLink" : "Create Account")}
             </button>
           </form>
         </div>

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { memo } from "react";
 
-export default function ItemCard({
+const ItemCard = memo(function ItemCard({
   title,
   description,
   tags = [],
@@ -158,4 +158,6 @@ export default function ItemCard({
       )}
     </div>
   );
-}
+});
+
+export default ItemCard;

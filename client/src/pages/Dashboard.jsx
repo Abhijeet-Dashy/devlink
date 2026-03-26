@@ -1,6 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
+  const { user, authFetch, logout } = useAuth();
+  const [folders, setFolders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchFolders = async () => {
+      try {
+        const response = await authFetch('/api/folders');
+        const data = await response.json();
+        if (data.success) {
+          setFolders(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch folders", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFolders();
+  }, []);
+
+  const handleNewFolder = async () => {
+    const name = window.prompt("Enter new folder name:");
+    if (!name) return;
+    
+    try {
+      const response = await authFetch('/api/folders', {
+        method: 'POST',
+        body: JSON.stringify({ name })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setFolders([...folders, data.data]);
+      }
+    } catch (error) {
+      console.error("Failed to create folder", error);
+    }
+  };
+
   const meshGradientBg = {
     backgroundColor: "#f8f9fa",
     backgroundImage: `
@@ -34,10 +76,10 @@ export default function Dashboard() {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 flex flex-col gap-1 mt-6">
-          <a
+        <nav className="flex-1 flex flex-col gap-1 mt-6 overflow-y-auto">
+          <Link
             className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 ease-in-out"
-            href="#"
+            to="/dashboard"
           >
             <span
               className="material-symbols-outlined"
@@ -46,33 +88,30 @@ export default function Dashboard() {
               grid_view
             </span>
             <span className="text-sm font-medium Inter">Dashboard</span>
-          </a>
-          <a
-            className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
-            href="#"
-          >
-            <span className="material-symbols-outlined">code</span>
-            <span className="text-sm font-medium Inter">DSA</span>
-          </a>
-          <a
-            className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
-            href="#"
-          >
-            <span className="material-symbols-outlined">description</span>
-            <span className="text-sm font-medium Inter">Templates</span>
-          </a>
-          <a
-            className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
-            href="#"
-          >
-            <span className="material-symbols-outlined">auto_stories</span>
-            <span className="text-sm font-medium Inter">Reading List</span>
-          </a>
+          </Link>
+          
+          {loading ? (
+             <div className="px-3 py-2 text-sm text-slate-400">Loading folders...</div>
+          ) : (
+            folders.map((folder) => (
+              <Link
+                key={folder._id}
+                className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
+                to={`/folder/${folder._id}`}
+              >
+                <span className="material-symbols-outlined">folder</span>
+                <span className="text-sm font-medium Inter truncate">{folder.name}</span>
+              </Link>
+            ))
+          )}
         </nav>
 
         {/* Bottom CTA & Footer Actions */}
         <div className="mt-auto flex flex-col gap-2">
-          <button className="w-full py-3 bg-primary text-on-primary font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/10 mb-4">
+          <button 
+            onClick={handleNewFolder}
+            className="w-full py-3 bg-primary text-on-primary font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/10 mb-4"
+          >
             <span className="material-symbols-outlined text-lg">add</span>
             New Folder
           </button>
@@ -120,24 +159,23 @@ export default function Dashboard() {
               <span className="material-symbols-outlined">notifications</span>
             </button>
             <button
-              className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors"
-              title="Settings"
+              onClick={logout}
+              className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors flex items-center"
+              title="Logout"
             >
-              <span className="material-symbols-outlined">settings</span>
+              <span className="material-symbols-outlined">logout</span>
             </button>
             <div className="h-8 w-px bg-slate-200 mx-2"></div>
             <div className="flex items-center gap-3 pl-2">
               <div className="text-right hidden sm:block">
                 <p className="text-xs font-bold text-slate-900 leading-none">
-                  Alex Rivera
+                  {user?.username || 'User'}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-1">Lead Architect</p>
+                <p className="text-[10px] text-slate-500 mt-1">{user?.email}</p>
               </div>
-              <img
-                alt="User profile avatar"
-                className="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV98wpoUqp-_zRkDgHeQ0LLhJLjAaMguIDacbG7KYHYNoK4eYpt02pxMhEsx1rgiuiqNcHj-_Ysg84WqwK9gjw7i8qUAmdpU7VoYDVBgfUxaJAN_6-dKh_-VhA2Fb1wulieqUcW6zKaZQr3MQ3cUlTVhjF9lQQufZo1rXXtX9vDe88kPMkjtjEjX7E9wOz3QaJrTzxZPtaudFJnLfyOKxsQx_Cx5Hv7-i4dDNjTHiTJXGE87J2RqikVAt0OECzb8zM2XINzxxeJA"
-              />
+              <div className="w-9 h-9 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center ring-2 ring-white shadow-sm uppercase">
+                {user?.username?.[0] || 'U'}
+              </div>
             </div>
           </div>
         </header>
@@ -181,18 +219,14 @@ export default function Dashboard() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="px-8 py-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary font-bold text-lg rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              <button onClick={handleNewFolder} className="px-8 py-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary font-bold text-lg rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
                 <span
                   className="material-symbols-outlined"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
-                  add_circle
+                  create_new_folder
                 </span>
-                Add First Item
-              </button>
-              <button className="px-8 py-4 bg-transparent text-on-surface font-semibold text-lg rounded-xl flex items-center gap-3 border border-slate-200 hover:bg-white transition-all">
-                <span className="material-symbols-outlined">folder_zip</span>
-                Import Archive
+                Create Folder
               </button>
             </div>
 
@@ -232,7 +266,7 @@ export default function Dashboard() {
 
       {/* Mobile Navigation (Visible only on small screens) */}
       <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] bg-white/90 backdrop-blur-xl rounded-2xl flex justify-around items-center py-4 shadow-2xl shadow-slate-300 z-50 border border-white/50">
-        <a className="text-primary flex flex-col items-center gap-1" href="#">
+        <Link className="text-primary flex flex-col items-center gap-1" to="/dashboard">
           <span
             className="material-symbols-outlined"
             style={{ fontVariationSettings: "'FILL' 1" }}
@@ -242,30 +276,18 @@ export default function Dashboard() {
           <span className="text-[10px] font-bold uppercase tracking-tighter">
             Dashboard
           </span>
-        </a>
-        <a className="text-slate-400 flex flex-col items-center gap-1" href="#">
-          <span className="material-symbols-outlined">code</span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter">
-            DSA
-          </span>
-        </a>
-        <div className="relative -top-8">
-          <button className="w-14 h-14 bg-primary text-white rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center transform transition-transform active:scale-90">
-            <span className="material-symbols-outlined text-3xl">add</span>
+        </Link>
+        <div className="relative -top-8 ml-auto mr-auto">
+          <button onClick={handleNewFolder} className="w-14 h-14 bg-primary text-white rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center transform transition-transform active:scale-90">
+            <span className="material-symbols-outlined text-3xl">create_new_folder</span>
           </button>
         </div>
-        <a className="text-slate-400 flex flex-col items-center gap-1" href="#">
-          <span className="material-symbols-outlined">description</span>
+        <button onClick={logout} className="text-slate-400 flex flex-col items-center gap-1">
+          <span className="material-symbols-outlined">logout</span>
           <span className="text-[10px] font-bold uppercase tracking-tighter">
-            Docs
+            Logout
           </span>
-        </a>
-        <a className="text-slate-400 flex flex-col items-center gap-1" href="#">
-          <span className="material-symbols-outlined">settings</span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter">
-            Profile
-          </span>
-        </a>
+        </button>
       </nav>
     </div>
   );

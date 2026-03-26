@@ -1,7 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-export default function Items({ isOpen, onClose }) {
-  if (!isOpen) return null;
+export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted }) {
+  const [content, setContent] = useState("");
+  const [note, setNote] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (item) {
+      setContent(item.content || "");
+      setNote(item.note || "");
+    }
+  }, [item]);
+
+  if (!isOpen || !item) return null;
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      const res = await authFetch(`/api/items/${item._id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ content, note })
+      });
+      if (res.ok) {
+        onClose(); // In a perfect world we also bubble up to update parent list, but closing is fine.
+      }
+    } catch (err) {
+      console.error("Save failed", err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if(!window.confirm("Are you sure you want to delete this item?")) return;
+    try {
+      const res = await authFetch(`/api/items/${item._id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        onItemDeleted(item._id);
+      }
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-background/20 backdrop-blur-sm font-body">
@@ -18,15 +60,15 @@ export default function Items({ isOpen, onClose }) {
             </div>
             <div>
               <h2 className="text-xl font-bold text-on-surface tracking-tight">
-                React Hook: UseEffect Template
+                {item.type.toUpperCase()} ITEM
               </h2>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-xs text-on-surface-variant font-medium">
-                  Templates
+                  {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Unknown'}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
                 <span className="text-xs text-on-surface-variant font-medium">
-                  Last updated 2 days ago
+                  Last updated {item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : 'Unknown'}
                 </span>
               </div>
             </div>
@@ -46,10 +88,13 @@ export default function Items({ isOpen, onClose }) {
           <section>
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-                Source Snippet
+                Content / Title
               </span>
               <div className="flex gap-2">
-                <button className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/5 rounded-full transition-all">
+                <button 
+                  onClick={() => navigator.clipboard.writeText(content)}
+                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/5 rounded-full transition-all"
+                >
                   <span className="material-symbols-outlined text-sm">
                     content_copy
                   </span>
@@ -59,27 +104,13 @@ export default function Items({ isOpen, onClose }) {
             </div>
             <div className="bg-surface-container-low rounded-xl p-6 font-mono text-sm leading-relaxed text-on-surface/80 border border-outline-variant/5 overflow-x-auto">
               <pre>
-                <code>
-                  <span className="text-primary">import</span> {"{"} useEffect, useState {"}"} <span className="text-primary">from</span> <span className="text-tertiary">'react'</span>;
-                  {"\n\n"}
-                  <span className="text-primary">const</span> <span className="text-on-primary-container">DataFetcher</span> = ({"{"} resourceId {"}"}) =&gt; {"{"}
-                  {"\n  "}<span className="text-primary">const</span> [data, setData] = <span className="text-on-primary-container">useState</span>(<span className="text-primary">null</span>);
-                  {"\n\n  "}<span className="text-on-primary-container">useEffect</span>(() =&gt; {"{"}
-                  {"\n    "}<span className="text-outline-variant">// Handle potential race conditions</span>
-                  {"\n    "}<span className="text-primary">let</span> isMounted = <span className="text-primary">true</span>;
-                  {"\n\n    "}<span className="text-primary">const</span> <span className="text-on-primary-container">fetchData</span> = <span className="text-primary">async</span> () =&gt; {"{"}
-                  {"\n      "}<span className="text-primary">const</span> response = <span className="text-primary">await</span> <span className="text-on-primary-container">fetch</span>(<span className="text-tertiary">`/api/v1/resource/{"${resourceId}"}`</span>);
-                  {"\n      "}<span className="text-primary">const</span> json = <span className="text-primary">await</span> response.<span className="text-on-primary-container">json</span>();
-                  {"\n      "}<span className="text-primary">if</span> (isMounted) <span className="text-on-primary-container">setData</span>(json);
-                  {"\n    "}{"}"};
-                  {"\n\n    "}<span className="text-on-primary-container">fetchData</span>();
-                  {"\n\n    "}<span className="text-primary">return</span> () =&gt; {"{"}
-                  {"\n      "}isMounted = <span className="text-primary">false</span>;
-                  {"\n    "}{"}"};
-                  {"\n  "}{"}"}, [resourceId]);
-                  {"\n\n  "}<span className="text-primary">return</span> data;
-                  {"\n"}{"}"};
-                </code>
+            <div className="bg-surface-container-low rounded-xl p-6 font-mono text-sm leading-relaxed text-on-surface/80 border border-outline-variant/5">
+              <textarea
+                className="w-full bg-transparent border-none focus:ring-0 resize-y outline-none min-h-[150px]"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+            </div>
               </pre>
             </div>
           </section>
@@ -97,7 +128,8 @@ export default function Items({ isOpen, onClose }) {
                 <textarea
                   className="w-full bg-transparent border-none focus:ring-0 p-4 text-sm leading-relaxed text-on-surface min-h-[120px] placeholder:text-outline-variant/60 outline-none resize-y"
                   placeholder="Add observations or usage instructions here..."
-                  defaultValue="Standard boilerplate for handling race conditions in async useEffect calls. Ensure 'isMounted' cleanup is included for high-frequency resourceId changes to prevent state updates on unmounted components."
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
                 ></textarea>
               </div>
             </div>
@@ -111,18 +143,9 @@ export default function Items({ isOpen, onClose }) {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between py-2 border-b border-outline-variant/10">
                     <span className="text-sm text-on-surface-variant">Created on</span>
-                    <span className="text-sm font-medium text-on-surface">Oct 24, 2023</span>
-                  </div>
-                  <div className="flex items-center justify-between py-2 border-b border-outline-variant/10">
-                    <span className="text-sm text-on-surface-variant">Folder</span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm text-outline-variant">
-                        folder
-                      </span>
-                      <span className="text-sm font-medium text-on-surface">
-                        Development/React
-                      </span>
-                    </div>
+                    <span className="text-sm font-medium text-on-surface">
+                      {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Unknown'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -132,24 +155,22 @@ export default function Items({ isOpen, onClose }) {
                   Tags
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-2.5 py-1 bg-surface-container-high rounded-md text-[11px] font-semibold text-on-surface-variant">
-                    REACT-HOOKS
-                  </span>
-                  <span className="px-2.5 py-1 bg-surface-container-high rounded-md text-[11px] font-semibold text-on-surface-variant">
-                    BOILERPLATE
-                  </span>
-                  <span className="px-2.5 py-1 bg-surface-container-high rounded-md text-[11px] font-semibold text-on-surface-variant">
-                    ASYNC
-                  </span>
+                  {(item.tags || []).map((t, idx) => (
+                    <span key={idx} className="px-2.5 py-1 bg-surface-container-high rounded-md text-[11px] font-semibold text-on-surface-variant">
+                      {t.toUpperCase()}
+                    </span>
+                  ))}
+                  {(!item.tags || item.tags.length === 0) && (
+                    <span className="text-xs text-on-surface-variant italic">No tags</span>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Modal Footer */}
         <div className="px-8 py-6 bg-surface-container-low border-t border-outline-variant/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-error hover:bg-error/5 rounded-lg transition-colors w-full sm:w-auto justify-center">
+          <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-error hover:bg-error/5 rounded-lg transition-colors w-full sm:w-auto justify-center">
             <span className="material-symbols-outlined text-lg">delete</span>
             Delete Item
           </button>
@@ -160,8 +181,8 @@ export default function Items({ isOpen, onClose }) {
             >
               Cancel
             </button>
-            <button className="px-6 py-2 bg-primary text-on-primary font-semibold rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all">
-              Edit Item
+            <button disabled={isSaving} onClick={handleSave} className="px-6 py-2 bg-primary text-on-primary font-semibold rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all disabled:opacity-50">
+              {isSaving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </div>
