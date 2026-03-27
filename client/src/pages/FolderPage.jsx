@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import ItemCard from "../components/ItemCard";
 import Items from "../components/Items";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
+import NewFolderModal from "../components/NewFolderModal";
+import NewItemModal from "../components/NewItemModal";
+import Loader from "../components/Loader";
 
 export default function FolderPage() {
   const { folderId } = useParams();
-  const { authFetch, user, logout } = useAuth();
-  const navigate = useNavigate();
+  const authFetch = useAuthStore(state => state.authFetch);
+  const user = useAuthStore(state => state.user);
+  const logout = useAuthStore(state => state.logout);
+  const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+  const [isNewItemModalOpen, setIsNewItemModalOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -51,30 +57,10 @@ export default function FolderPage() {
       }
     };
     initData();
-  }, [folderId]);
+  }, [folderId, authFetch]);
 
-  const handleAddItem = async () => {
-    const content = window.prompt("Enter item content/title:");
-    if (!content) return;
-    const note = window.prompt("Enter description:");
-    
-    try {
-      const res = await authFetch('/api/items', {
-        method: 'POST',
-        body: JSON.stringify({ 
-          content, 
-          note: note || "", 
-          type: "text", 
-          folderId 
-        })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setItems([data.data, ...items]);
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleAddItem = () => {
+    setIsNewItemModalOpen(true);
   };
 
   return (
@@ -114,7 +100,7 @@ export default function FolderPage() {
             </Link>
           ))}
           <div className="mt-8 px-3">
-            <button className="w-full py-2.5 px-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-lg text-sm font-semibold shadow-md shadow-primary/10 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+            <button onClick={() => setIsNewFolderModalOpen(true)} className="w-full py-2.5 px-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-lg text-sm font-semibold shadow-md shadow-primary/10 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
               <span className="material-symbols-outlined text-sm">add</span>
               New Folder
             </button>
@@ -136,49 +122,53 @@ export default function FolderPage() {
       {/* Main Content Area */}
       <main className="md:ml-64 min-h-screen relative flex flex-col w-full">
         {/* TopNavBar */}
-        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 flex justify-between items-center px-6 py-3 max-w-7xl mx-auto rounded-2xl mt-4 md:mx-4 border border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-xl shadow-slate-200/40 dark:shadow-none transition-all">
+        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-all">
           <div className="flex items-center gap-4 flex-1">
-            <div className="relative w-full max-w-md">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
+            <div className="relative w-full max-w-[240px]">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
                 search
               </span>
               <input
-                className="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/60 outline-none"
-                placeholder="Search patterns, snippets, or tags..."
+                className="w-full bg-slate-100/50 border border-transparent rounded-lg pl-9 pr-3 py-1.5 text-sm focus:bg-white focus:border-slate-200 focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 font-sans outline-none transition-all"
+                placeholder="Search..."
                 type="text"
               />
             </div>
           </div>
-          <div className="flex items-center gap-2 ml-4">
-            <button className="p-2 text-on-surface-variant hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
-              <span className="material-symbols-outlined">notifications</span>
+          <div className="flex items-center gap-2 ml-2">
+            <button
+              onClick={logout}
+              className="p-1.5 text-slate-400 hover:text-error hover:bg-error/10 rounded-lg transition-all flex items-center"
+              title="Logout"
+            >
+              <span className="material-symbols-outlined text-[18px]">logout</span>
             </button>
-            <button className="p-2 text-on-surface-variant hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
-              <span className="material-symbols-outlined">settings</span>
-            </button>
-            <div className="h-8 w-[1px] bg-outline-variant/20 mx-2"></div>
-            <div className="flex items-center gap-3 pl-2">
-              <img
-                alt="User profile avatar"
-                className="w-9 h-9 rounded-full object-cover ring-2 ring-primary/10"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrcnZHn9-saY5eBh-HZZv4RUihJVvI-MQvsl39kXfrxzbgUEyybcjtTCtLB5BbLeJ9IUFeR8B1Nf8F4oxS2X6o1EkHBhxAmXmWOXtGQ3z1Fwsv6q_sSwH6DGMp2JvKJJX_hXFaa8vUg5O4x1DE1x7shQxZZgVQduZSi9H_qHfSRes-tsSuM9vSXm2T4AlVm1d0OytPD_7Y1oTwgD6CQJWmHrTpY1CmEpy2Xdnlmb59IeJ0-sPY4Tfo2k0cJyQmm_r8vxFK33C2Jw"
-              />
+            <div className="h-4 w-px bg-slate-200 mx-1"></div>
+            <div className="flex items-center gap-2">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs font-bold text-slate-700 leading-none">
+                  {user?.username || 'User'}
+                </p>
+              </div>
+              <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center ring-1 ring-primary/20 shadow-sm uppercase text-xs ml-1">
+                {user?.username?.[0] || 'U'}
+              </div>
             </div>
           </div>
         </header>
 
         {/* Content Canvas */}
-        <section className="mt-28 px-8 pb-12 flex-1 max-w-7xl mx-auto w-full">
+        <section className="pt-24 px-8 pb-12 flex-1 max-w-7xl mx-auto w-full">
           {/* Folder Header & Action Bar */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
               <nav className="flex items-center gap-2 text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-2">
                 <span>Folders</span>
                 <span className="material-symbols-outlined text-[10px]">chevron_right</span>
-                <span className="text-primary-dim">DSA</span>
+                <span className="text-primary-dim">{folders.find(f => f._id === folderId)?.name || 'Folder'}</span>
               </nav>
               <h2 className="text-4xl font-extrabold text-on-surface tracking-tighter">
-                DSA Patterns
+                {folders.find(f => f._id === folderId)?.name || 'Folder Content'}
               </h2>
               <p className="text-on-surface-variant mt-2 max-w-xl">
                 Curated collection of fundamental data structures and algorithmic patterns for technical interviews.
@@ -210,7 +200,7 @@ export default function FolderPage() {
           {/* Bento Grid of Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
-              <p className="col-span-3 text-center text-slate-500 py-10">Loading items...</p>
+              <div className="col-span-3 py-16"><Loader size="lg" text="Loading items..." /></div>
             ) : items.length === 0 ? (
                <p className="col-span-3 text-center text-slate-500 py-10">No items found in this folder.</p>
             ) : items.map((item, idx) => (
@@ -261,6 +251,17 @@ export default function FolderPage() {
           setSelectedItem(null);
         }}
         authFetch={authFetch}
+      />
+      <NewFolderModal 
+        isOpen={isNewFolderModalOpen} 
+        onClose={() => setIsNewFolderModalOpen(false)} 
+        onFolderCreated={(folder) => setFolders([...folders, folder])} 
+      />
+      <NewItemModal 
+        isOpen={isNewItemModalOpen} 
+        onClose={() => setIsNewItemModalOpen(false)} 
+        folderId={folderId}
+        onItemCreated={(item) => setItems([item, ...items])} 
       />
     </div>
   );

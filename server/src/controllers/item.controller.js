@@ -37,14 +37,12 @@ export const createItem = asyncHandler(async (req, res) => {
 export const getItems = asyncHandler(async (req, res) => {
   const { folderId } = req.query;
 
-  if (!folderId) {
-    throw new ApiError(400, "folderId required");
+  const query = { userId: req.user._id };
+  if (folderId) {
+    query.folderId = folderId;
   }
 
-  const items = await Item.find({
-    userId: req.user._id,
-    folderId,
-  }).sort({ createdAt: -1 });
+  const items = await Item.find(query).sort({ createdAt: -1 });
 
   return res.status(200).json(new ApiResponse(200, items));
 });

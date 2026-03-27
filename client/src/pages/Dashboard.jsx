@@ -1,46 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
+import NewFolderModal from "../components/NewFolderModal";
+import Loader from "../components/Loader";
+import ItemCard from "../components/ItemCard";
+import Items from "../components/Items";
 
 export default function Dashboard() {
-  const { user, authFetch, logout } = useAuth();
+  const user = useAuthStore(state => state.user);
+  const authFetch = useAuthStore(state => state.authFetch);
+  const logout = useAuthStore(state => state.logout);
   const [folders, setFolders] = useState([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    const fetchFolders = async () => {
+    const fetchData = async () => {
       try {
-        const response = await authFetch('/api/folders');
-        const data = await response.json();
-        if (data.success) {
-          setFolders(data.data);
+        const [fRes, iRes] = await Promise.all([
+          authFetch('/api/folders'),
+          authFetch('/api/items')
+        ]);
+        const fData = await fRes.json();
+        const iData = await iRes.json();
+        if (fData.success) {
+          setFolders(fData.data);
+        }
+        if (iData.success) {
+          setItems(iData.data);
         }
       } catch (error) {
-        console.error("Failed to fetch folders", error);
+        console.error("Failed to fetch data", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchFolders();
-  }, []);
+    fetchData();
+  }, [authFetch]);
 
-  const handleNewFolder = async () => {
-    const name = window.prompt("Enter new folder name:");
-    if (!name) return;
-    
-    try {
-      const response = await authFetch('/api/folders', {
-        method: 'POST',
-        body: JSON.stringify({ name })
-      });
-      const data = await response.json();
-      if (data.success) {
-        setFolders([...folders, data.data]);
-      }
-    } catch (error) {
-      console.error("Failed to create folder", error);
-    }
+  const handleNewFolder = () => {
+    setIsNewFolderModalOpen(true);
   };
 
   const meshGradientBg = {
@@ -91,7 +92,7 @@ export default function Dashboard() {
           </Link>
           
           {loading ? (
-             <div className="px-3 py-2 text-sm text-slate-400">Loading folders...</div>
+             <div className="py-8"><Loader size="sm" text="Loading folders..." /></div>
           ) : (
             folders.map((folder) => (
               <Link
@@ -138,51 +139,73 @@ export default function Dashboard() {
         style={meshGradientBg}
       >
         {/* TopNavBar */}
-        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 flex justify-between items-center px-6 py-3 max-w-7xl mx-auto rounded-2xl mt-4 mx-4 border border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-xl shadow-slate-200/40 dark:shadow-none">
+        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-all">
           <div className="flex items-center gap-4 flex-1">
-            <div className="relative w-full max-w-md">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">
+            <div className="relative w-full max-w-[240px]">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
                 search
               </span>
               <input
-                className="w-full bg-slate-100/50 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 font-sans outline-none"
-                placeholder="Search architecture, snippets, links..."
+                className="w-full bg-slate-100/50 border border-transparent rounded-lg pl-9 pr-3 py-1.5 text-sm focus:bg-white focus:border-slate-200 focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 font-sans outline-none transition-all"
+                placeholder="Search..."
                 type="text"
               />
             </div>
           </div>
-          <div className="flex items-center gap-4 ml-6">
-            <button
-              className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors"
-              title="Notifications"
-            >
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
+          <div className="flex items-center gap-2 ml-2">
             <button
               onClick={logout}
-              className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors flex items-center"
+              className="p-1.5 text-slate-400 hover:text-error hover:bg-error/10 rounded-lg transition-all flex items-center"
               title="Logout"
             >
-              <span className="material-symbols-outlined">logout</span>
+              <span className="material-symbols-outlined text-[18px]">logout</span>
             </button>
-            <div className="h-8 w-px bg-slate-200 mx-2"></div>
-            <div className="flex items-center gap-3 pl-2">
+            <div className="h-4 w-px bg-slate-200 mx-1"></div>
+            <div className="flex items-center gap-2">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-slate-900 leading-none">
+                <p className="text-xs font-bold text-slate-700 leading-none">
                   {user?.username || 'User'}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-1">{user?.email}</p>
               </div>
-              <div className="w-9 h-9 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center ring-2 ring-white shadow-sm uppercase">
+              <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center ring-1 ring-primary/20 shadow-sm uppercase text-xs ml-1">
                 {user?.username?.[0] || 'U'}
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page Body: Empty State */}
-        <section className="flex-1 flex flex-col items-center justify-center px-6 pt-32 pb-16">
-          <div className="max-w-2xl w-full text-center space-y-12">
+        {/* Page Body */}
+        <section className="flex-1 flex flex-col items-center px-6 pt-24 pb-16 w-full max-w-7xl mx-auto">
+          {items.length > 0 ? (
+            <div className="w-full">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                <div>
+                  <h2 className="text-3xl font-extrabold text-on-surface tracking-tighter">
+                    Dashboard
+                  </h2>
+                  <p className="text-on-surface-variant mt-1">Your entire knowledge vault.</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {items.map((item, idx) => {
+                  const folder = folders.find(f => f._id === item.folderId);
+                  return (
+                    <ItemCard
+                      key={item._id}
+                      icon={item.type === 'link' ? "link" : item.type === 'image' ? "image" : "description"}
+                      color={idx % 3 === 0 ? "primary" : idx % 3 === 1 ? "secondary" : "tertiary"}
+                      title={item.content}
+                      description={item.note || ""}
+                      tags={folder ? [folder.name, ...(item.tags || [])] : (item.tags || [])}
+                      imageSrc={item.type === 'image' ? item.sourceUrl : null}
+                      onClick={() => setSelectedItem(item)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+          <div className="max-w-2xl w-full text-center space-y-12 my-auto">
             {/* Asymmetric Decorative Element */}
             <div className="relative inline-block mx-auto">
               <div
@@ -261,6 +284,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+          )}
         </section>
       </main>
 
@@ -289,6 +313,21 @@ export default function Dashboard() {
           </span>
         </button>
       </nav>
+      <NewFolderModal 
+        isOpen={isNewFolderModalOpen} 
+        onClose={() => setIsNewFolderModalOpen(false)} 
+        onFolderCreated={(folder) => setFolders([...folders, folder])} 
+      />
+      <Items 
+        isOpen={!!selectedItem} 
+        onClose={() => setSelectedItem(null)} 
+        item={selectedItem} 
+        onItemDeleted={(id) => {
+          setItems(items.filter(i => i._id !== id));
+          setSelectedItem(null);
+        }}
+        authFetch={authFetch}
+      />
     </div>
   );
 }

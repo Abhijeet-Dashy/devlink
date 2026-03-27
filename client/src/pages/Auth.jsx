@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -8,31 +9,31 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   
-  const { login, register } = useAuth();
+  const login = useAuthStore(state => state.login);
+  const register = useAuthStore(state => state.register);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
 
     if (isLogin) {
       const res = await login(email, password);
       if (res.success) {
+        toast.success("Welcome back!");
         navigate("/dashboard");
       } else {
-        setError(res.error);
+        toast.error(res.error || "Login failed");
       }
     } else {
       const res = await register(email, password, username);
       if (res.success) {
         setIsLogin(true); // Switch to login after successful register
-        setError("Registration successful! Please login.");
+        toast.success("Registration successful! Please login.");
       } else {
-        setError(res.error);
+        toast.error(res.error || "Registration failed");
       }
     }
     setLoading(false);
@@ -162,11 +163,6 @@ export default function AuthPage() {
 
           {/* Auth Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4">
-                {error}
-              </div>
-            )}
             
             {!isLogin && (
               <div className="space-y-1.5 relative">
@@ -265,7 +261,12 @@ export default function AuthPage() {
               className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dim hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:hover:-translate-y-0"
               type="submit"
             >
-              {loading ? "Please wait..." : (isLogin ? "Sign In to DevLink" : "Create Account")}
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span>Please wait...</span>
+                </div>
+              ) : (isLogin ? "Sign In to DevLink" : "Create Account")}
             </button>
           </form>
         </div>

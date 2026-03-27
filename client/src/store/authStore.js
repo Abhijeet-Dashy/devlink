@@ -1,33 +1,26 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { create } from 'zustand';
 
-const AuthContext = createContext();
+export const useAuthStore = create((set, get) => ({
+  user: null,
+  token: localStorage.getItem('token') || null,
+  loading: true,
 
-export const useAuth = () => useContext(AuthContext);
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-
-  useEffect(() => {
+  initialize: () => {
+    const token = get().token;
     if (token) {
-      // In a real app we'd fetch the current user profile here
-      // For now we'll just decode or mock user if not stored
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         try {
-          setUser(JSON.parse(storedUser));
+          set({ user: JSON.parse(storedUser) });
         } catch (e) {
           console.error("Failed to parse stored user", e);
         }
       }
     }
-    setLoading(false);
-  }, [token]);
+    set({ loading: false });
+  },
 
-  const login = async (email, password) => {
+  login: async (email, password) => {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -38,8 +31,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       
       if (data.success) {
-        setToken(data.data.accessToken);
-        setUser(data.data.user);
+        set({ token: data.data.accessToken, user: data.data.user });
         localStorage.setItem('token', data.data.accessToken);
         localStorage.setItem('user', JSON.stringify(data.data.user));
         return { success: true };
@@ -50,9 +42,9 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', error);
       return { success: false, error: "Network error" };
     }
-  };
+  },
 
-  const register = async (email, password, username) => {
+  register: async (email, password, username) => {
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -71,17 +63,21 @@ export const AuthProvider = ({ children }) => {
       console.error('Registration error:', error);
       return { success: false, error: "Network error" };
     }
-  };
+  },
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
+  logout: (navigate) => {
+    set({ token: null, user: null });
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/register');
-  };
+    if (navigate) {
+      navigate('/login');
+    } else {
+      window.location.href = '/login';
+    }
+  },
 
-  const authFetch = async (url, options = {}) => {
+  authFetch: async (url, options = {}) => {
+    const { token, logout } = get();
     const headers = {
       'Content-Type': 'application/json',
       ...options.headers,
@@ -91,20 +87,10 @@ export const AuthProvider = ({ children }) => {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    try {
-      const response = await fetch(url, { ...options, headers });
-      if (response.status === 401) {
-        logout();
-      }
-      return response;
-    } catch (error) {
-      throw error;
+    const response = await fetch(url, { ...options, headers });
+    if (response.status === 401) {
+      logout();
     }
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, authFetch }}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
-};
+    return response;
+  }
+}));

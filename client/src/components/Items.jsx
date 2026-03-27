@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from 'react-hot-toast';
 
 export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted }) {
   const [content, setContent] = useState("");
@@ -22,9 +23,13 @@ export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted 
         body: JSON.stringify({ content, note })
       });
       if (res.ok) {
+        toast.success("Item updated successfully");
         onClose(); // In a perfect world we also bubble up to update parent list, but closing is fine.
+      } else {
+        toast.error("Failed to update item");
       }
     } catch (err) {
+      toast.error("Network error: failed to update");
       console.error("Save failed", err);
     } finally {
       setIsSaving(false);
@@ -38,9 +43,13 @@ export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted 
         method: 'DELETE'
       });
       if (res.ok) {
+        toast.success("Item deleted");
         onItemDeleted(item._id);
+      } else {
+        toast.error("Failed to delete item");
       }
     } catch (err) {
+      toast.error("Network error: failed to delete");
       console.error("Delete failed", err);
     }
   };
