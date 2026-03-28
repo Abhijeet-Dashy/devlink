@@ -5,12 +5,12 @@ const ItemCard = memo(function ItemCard({
   description,
   tags = [],
   icon,
-  color = "primary", 
+  color = "primary",
   imageSrc,
-  splitNode, 
+  splitNode,
   className = "",
-  children, 
-  onClick, 
+  children,
+  onClick,
 }) {
   return (
     <div
@@ -66,7 +66,6 @@ const ItemCard = memo(function ItemCard({
       {/* --- VARIATION 2: Standard or Split Content Card --- */}
       {!imageSrc && (
         <div className={`flex flex-col md:flex-row gap-3 h-full relative z-10`}>
-          
           {/* Left / Main Column */}
           <div className="flex-1 flex flex-col">
             <div className="flex justify-between items-start mb-2.5">
@@ -79,11 +78,13 @@ const ItemCard = memo(function ItemCard({
                 </span>
               </div>
               {!splitNode && (
-                <button 
-                  onClick={(e) => e.stopPropagation()} 
+                <button
+                  onClick={(e) => e.stopPropagation()}
                   className="text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-transparent hover:border-black dark:hover:border-white transition-colors relative z-20 px-0.5 py-0"
                 >
-                  <span className="material-symbols-outlined text-sm">more_horiz</span>
+                  <span className="material-symbols-outlined text-sm">
+                    more_horiz
+                  </span>
                 </button>
               )}
             </div>
@@ -117,9 +118,7 @@ const ItemCard = memo(function ItemCard({
           </div>
 
           {Object.keys(splitNode || {}).length > 0 && (
-             <div className="flex-1">
-               {splitNode}
-             </div>
+            <div className="flex-1">{splitNode}</div>
           )}
         </div>
       )}

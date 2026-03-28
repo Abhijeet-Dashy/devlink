@@ -17,21 +17,21 @@ const Hero = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] text-black dark:text-white text-xs font-bold uppercase tracking-widest mb-8 shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)] transition-colors">
             v2.0 Architectural Update
           </div>
-          
+
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 text-black dark:text-white uppercase transition-colors">
             Save Anything.
             <br />
             Organize Everything.
           </h1>
-          
+
           <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed mb-10 transition-colors">
-            The structural workspace for modern developers. A drafting table
-            for your code snippets, documentation, and inspiration—built with
+            The structural workspace for modern developers. A drafting table for
+            your code snippets, documentation, and inspiration—built with
             precision and intent.
           </p>
-          
+
           <div className="flex flex-wrap justify-center gap-6">
-            <button 
+            <button
               onClick={() => navigate("/register")}
               className="px-8 py-4 bg-black dark:bg-white text-[#f5f5f5] dark:text-black border-2 border-black dark:border-white font-black text-lg hover:bg-[#f5f5f5] hover:text-black dark:hover:bg-[#0a0a0a] dark:hover:text-white hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0_0_rgba(255,255,255,1)] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none flex items-center gap-2 group"
             >
@@ -50,14 +50,14 @@ const Hero = () => {
         <div className="mt-20 relative w-full max-w-5xl mx-auto">
           {/* Halftone offset background for style */}
           <div className="absolute top-4 left-4 w-full h-full border-2 border-black dark:border-white halftone-bg z-0 hidden md:block"></div>
-          
+
           <div className="relative z-10 bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-4 shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-colors">
             <div className="border-b-2 border-black dark:border-white pb-3 mb-4 flex items-center gap-2 transition-colors">
               <div className="w-3 h-3 rounded-full border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a]"></div>
               <div className="w-3 h-3 rounded-full border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a]"></div>
               <div className="w-3 h-3 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a]"></div>
             </div>
-            
+
             {/* The Image itself given a pseudo-halftone feel via mix-blend-mode or filters */}
             <div className="relative aspect-video overflow-hidden border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-black transition-colors">
               <img
@@ -86,7 +86,6 @@ const Hero = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          
           {/* Feature 1 */}
           <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div className="absolute top-0 right-0 w-32 h-32 halftone-bg opacity-20 dark:opacity-10 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-500"></div>
@@ -94,10 +93,13 @@ const Hero = () => {
               save
             </span>
             <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 transition-colors">
-              Save Links,<br/>Notes, Code
+              Save Links,
+              <br />
+              Notes, Code
             </h3>
             <p className="text-gray-500 dark:text-gray-400 font-medium transition-colors">
-              A universal clipboard for developers. Capture endpoints, snippets, and inspiration in one secure place.
+              A universal clipboard for developers. Capture endpoints, snippets,
+              and inspiration in one secure place.
             </p>
           </div>
 
@@ -108,28 +110,32 @@ const Hero = () => {
               folder_open
             </span>
             <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 transition-colors">
-              Organize<br/>Into Folders
+              Organize
+              <br />
+              Into Folders
             </h3>
             <p className="text-gray-500 dark:text-gray-400 font-medium relative z-10 transition-colors">
-              Create a structured hierarchy. Group resources by project, tech stack, or team for effortless retrieval.
+              Create a structured hierarchy. Group resources by project, tech
+              stack, or team for effortless retrieval.
             </p>
           </div>
 
           {/* Feature 3 */}
           <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] relative overflow-hidden group hover:-translate-y-1 transition-all">
-             {/* Dotted Border Accent */}
+            {/* Dotted Border Accent */}
             <div className="absolute inset-2 border-[3px] border-dotted border-black dark:border-white opacity-20 pointer-events-none"></div>
             <span className="material-symbols-outlined text-black dark:text-white text-4xl mb-6 relative z-10 transition-colors">
               sell
             </span>
             <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 relative z-10 transition-colors">
-              Add Notes<br/>& Tags
+              Add Notes
+              <br />& Tags
             </h3>
             <p className="text-gray-500 dark:text-gray-400 font-medium relative z-10 transition-colors">
-              Enrich your saved items with personal context. Tag extensively for lightning-fast semantic search.
+              Enrich your saved items with personal context. Tag extensively for
+              lightning-fast semantic search.
             </p>
           </div>
-
         </div>
       </section>
 
@@ -137,7 +143,7 @@ const Hero = () => {
       <div className="w-full h-8 border-y-2 border-black dark:border-white halftone-bg opacity-40 dark:opacity-20 my-20 transition-colors"></div>
 
       <div className="mb-20">
-        <CTA/>
+        <CTA />
       </div>
     </main>
   );

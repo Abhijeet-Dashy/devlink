@@ -7,8 +7,8 @@ export default function LandingPage() {
   return (
     <>
       <LandingPageNavbar />
-      <Hero/>
-      <Footer/>
+      <Hero />
+      <Footer />
     </>
   );
 }

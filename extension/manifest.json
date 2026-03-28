@@ -3,6 +3,10 @@
   "name": "DevLink Saver",
   "version": "1.0",
   "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "http://localhost:5173/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },

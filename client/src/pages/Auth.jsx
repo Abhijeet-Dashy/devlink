@@ -10,9 +10,9 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  const login = useAuthStore(state => state.login);
-  const register = useAuthStore(state => state.register);
+
+  const login = useAuthStore((state) => state.login);
+  const register = useAuthStore((state) => state.register);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -57,10 +57,15 @@ export default function AuthPage() {
 
         <div className="relative z-10">
           <h1 className="text-7xl font-black leading-[0.9] tracking-tighter mb-8 uppercase text-black dark:text-white transition-colors">
-            The<br/>Architects<br/>Of Code.
+            The
+            <br />
+            Architects
+            <br />
+            Of Code.
           </h1>
           <p className="text-lg font-bold max-w-sm text-gray-600 dark:text-gray-300 border-l-[4px] border-black dark:border-white pl-4 transition-colors">
-            Curate your technical identity. Build your library. Shape your legacy.
+            Curate your technical identity. Build your library. Shape your
+            legacy.
           </p>
         </div>
 
@@ -72,12 +77,12 @@ export default function AuthPage() {
             EDITION 01
           </span>
         </div>
-        
+
         {/* Decorative Grid Accent */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-32 border-y-[3px] border-l-[3px] border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] flex flex-col transition-colors">
-           <div className="flex-1 border-b-[3px] border-black dark:border-white"></div>
-           <div className="flex-1 border-b-[3px] border-black dark:border-white"></div>
-           <div className="flex-1"></div>
+          <div className="flex-1 border-b-[3px] border-black dark:border-white"></div>
+          <div className="flex-1 border-b-[3px] border-black dark:border-white"></div>
+          <div className="flex-1"></div>
         </div>
       </section>
 
@@ -131,7 +136,6 @@ export default function AuthPage() {
 
           {/* Auth Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            
             {!isLogin && (
               <div className="space-y-2">
                 <label className="text-sm font-black tracking-widest uppercase text-black dark:text-white block transition-colors">
@@ -211,7 +215,9 @@ export default function AuthPage() {
                 className="text-sm font-bold text-gray-600 dark:text-gray-400 scale-y-95 cursor-pointer transition-colors"
                 htmlFor="remember"
               >
-                {isLogin ? "Stay signed in for 30 days" : "I agree to the Terms & Privacy Policy"}
+                {isLogin
+                  ? "Stay signed in for 30 days"
+                  : "I agree to the Terms & Privacy Policy"}
               </label>
             </div>
 
@@ -225,19 +231,32 @@ export default function AuthPage() {
                   <div className="w-5 h-5 border-[3px] border-transparent border-t-[#f5f5f5] dark:border-t-white rounded-full animate-spin"></div>
                   <span>Waiting...</span>
                 </div>
-              ) : (isLogin ? "Authenticate" : "Create Account")}
+              ) : isLogin ? (
+                "Authenticate"
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
 
           {/* Footer links */}
           <div className="mt-16 flex gap-6 text-xs font-black tracking-widest uppercase text-gray-500 dark:text-gray-500 justify-center lg:justify-start">
-            <a className="hover:text-black dark:hover:text-white transition-colors" href="#">
+            <a
+              className="hover:text-black dark:hover:text-white transition-colors"
+              href="#"
+            >
               Privacy
             </a>
-            <a className="hover:text-black dark:hover:text-white transition-colors" href="#">
+            <a
+              className="hover:text-black dark:hover:text-white transition-colors"
+              href="#"
+            >
               Terms
             </a>
-            <a className="hover:text-black dark:hover:text-white transition-colors" href="#">
+            <a
+              className="hover:text-black dark:hover:text-white transition-colors"
+              href="#"
+            >
               Security
             </a>
           </div>
