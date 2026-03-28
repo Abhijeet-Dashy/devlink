@@ -24,7 +24,7 @@ export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted 
       });
       if (res.ok) {
         toast.success("Item updated successfully");
-        onClose(); // In a perfect world we also bubble up to update parent list, but closing is fine.
+        onClose(); 
       } else {
         toast.error("Failed to update item");
       }
@@ -55,122 +55,124 @@ export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-background/20 backdrop-blur-sm font-body">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-8 font-inter">
+      {/* Brutalist Backdrop */}
+      <div className="absolute inset-0 bg-[#f5f5f5]/80 dark:bg-[#0a0a0a]/90 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="absolute inset-0 halftone-bg opacity-30 dark:opacity-10 pointer-events-none"></div>
+      
       {/* Modal Container */}
-      <div className="w-full max-w-4xl bg-surface-container-lowest rounded-xl shadow-[0px_20px_40px_rgba(43,52,55,0.08)] flex flex-col max-h-[921px] overflow-hidden border border-outline-variant/15">
+      <div className="relative w-full max-w-3xl bg-[#f5f5f5] dark:bg-[#0a0a0a] border-[3px] border-black dark:border-white shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)] flex flex-col max-h-[85vh] overflow-hidden z-20">
         
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-outline-variant/10">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b-[3px] border-black dark:border-white bg-[#e0e0e0] dark:bg-[#111111]">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary-container rounded-lg text-on-primary-container">
-              <span className="material-symbols-outlined text-xl">
-                description
+            <div className="p-1.5 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]">
+              <span className="material-symbols-outlined text-black dark:text-white text-lg">
+                {item.type === 'link' ? "link" : item.type === 'image' ? "image" : "description"}
               </span>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-on-surface tracking-tight">
+              <h2 className="text-xl font-black text-black dark:text-white tracking-tighter uppercase">
                 {item.type.toUpperCase()} ITEM
               </h2>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-xs text-on-surface-variant font-medium">
+                <span className="text-[9px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">
                   {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Unknown'}
                 </span>
-                <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
-                <span className="text-xs text-on-surface-variant font-medium">
-                  Last updated {item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : 'Unknown'}
+                <span className="w-1 h-1 bg-black dark:bg-white"></span>
+                <span className="text-[9px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">
+                  UPDATED {item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : 'Unknown'}
                 </span>
               </div>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-surface-container-high rounded-full transition-colors duration-200 text-on-surface-variant"
+            className="p-1.5 border-2 border-transparent hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black text-black dark:text-white transition-all flex items-center justify-center focus:outline-none"
           >
-            <span className="material-symbols-outlined">close</span>
+            <span className="material-symbols-outlined font-bold text-[20px]">close</span>
           </button>
         </div>
 
         {/* Modal Body (Scrollable) */}
-        <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8">
+        <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-6 space-y-6 bg-[#f5f5f5] dark:bg-[#0a0a0a]">
           
-          {/* Code Snippet Area */}
+          {/* Content / Title Area */}
           <section>
-            <div className="flex items-center justify-between mb-3 px-1">
-              <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-                Content / Title
+            <div className="flex items-center justify-between mb-2 border-b-2 border-black dark:border-white pb-1.5">
+              <span className="text-xs font-black uppercase tracking-widest text-black dark:text-white">
+                Content / Source
               </span>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => navigator.clipboard.writeText(content)}
-                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/5 rounded-full transition-all"
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    content_copy
-                  </span>
-                  Copy
-                </button>
-              </div>
+              <button 
+                onClick={() => navigator.clipboard.writeText(content)}
+                className="flex items-center gap-1 px-2 py-1 border-2 border-black dark:border-white text-[9px] font-black uppercase tracking-widest text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-[#f5f5f5] dark:hover:text-[#0a0a0a] transition-all focus:outline-none"
+              >
+                <span className="material-symbols-outlined text-[14px]">content_copy</span>
+                Copy
+              </button>
             </div>
-            <div className="bg-surface-container-low rounded-xl p-6 font-mono text-sm leading-relaxed text-on-surface/80 border border-outline-variant/5 overflow-x-auto">
-              <pre>
-            <div className="bg-surface-container-low rounded-xl p-6 font-mono text-sm leading-relaxed text-on-surface/80 border border-outline-variant/5">
+            <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] p-3 font-mono text-xs leading-relaxed text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)]">
               <textarea
-                className="w-full bg-transparent border-none focus:ring-0 resize-y outline-none min-h-[150px]"
+                className="w-full bg-transparent border-none focus:ring-0 resize-y outline-none min-h-[80px] font-bold py-1"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
             </div>
-              </pre>
-            </div>
           </section>
 
-          {/* Two Column Layout for Metadata & Notes */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          {/* Two Column Layout for Notes & Metadata */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             
             {/* Notes Section */}
-            <div className="col-span-1 md:col-span-7">
-              <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">
+            <div className="col-span-1 md:col-span-8">
+              <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
                 Internal Notes
               </label>
-              <div className="relative group">
-                <div className="absolute inset-0 bg-surface-container border border-outline-variant/15 rounded-xl -z-10 transition-all duration-200 group-focus-within:ring-2 ring-primary/20"></div>
+              <div className="relative group bg-[#e0e0e0] dark:bg-[#111111] border-2 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)]">
                 <textarea
-                  className="w-full bg-transparent border-none focus:ring-0 p-4 text-sm leading-relaxed text-on-surface min-h-[120px] placeholder:text-outline-variant/60 outline-none resize-y"
-                  placeholder="Add observations or usage instructions here..."
+                  className="w-full bg-transparent border-none focus:ring-0 p-3 text-xs font-bold leading-relaxed text-black dark:text-white min-h-[140px] placeholder:text-gray-500 dark:placeholder:text-gray-600 outline-none resize-y py-2"
+                  placeholder="ADD OBSERVATIONS OR ARCHITECTURAL NOTES..."
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                 ></textarea>
+                <div className="absolute inset-0 halftone-bg opacity-20 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen"></div>
               </div>
             </div>
 
             {/* Metadata Section */}
-            <div className="col-span-1 md:col-span-5 space-y-6">
+            <div className="col-span-1 md:col-span-4 space-y-6">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">
-                  Attributes
+                <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
+                  System Info
                 </label>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between py-2 border-b border-outline-variant/10">
-                    <span className="text-sm text-on-surface-variant">Created on</span>
-                    <span className="text-sm font-medium text-on-surface">
-                      {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Unknown'}
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[9px] uppercase font-black tracking-widest text-gray-500 dark:text-gray-500">Record ID</span>
+                    <span className="text-[10px] font-mono font-bold text-black dark:text-white truncate bg-[#e0e0e0] dark:bg-[#1a1a1a] p-1.5 border-2 border-black dark:border-white">
+                      {item._id}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[9px] uppercase font-black tracking-widest text-gray-500 dark:text-gray-500">Item Type</span>
+                    <span className="text-[10px] font-mono font-bold text-black dark:text-white uppercase p-1.5 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a]">
+                      {item.type}
                     </span>
                   </div>
                 </div>
               </div>
               
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">
+                <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
                   Tags
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {(item.tags || []).map((t, idx) => (
-                    <span key={idx} className="px-2.5 py-1 bg-surface-container-high rounded-md text-[11px] font-semibold text-on-surface-variant">
+                    <span key={idx} className="px-2 py-1 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white">
                       {t.toUpperCase()}
                     </span>
                   ))}
                   {(!item.tags || item.tags.length === 0) && (
-                    <span className="text-xs text-on-surface-variant italic">No tags</span>
+                    <span className="text-[10px] font-bold text-gray-500 dark:text-gray-500 uppercase tracking-widest">No tags</span>
                   )}
                 </div>
               </div>
@@ -178,20 +180,29 @@ export default function Items({ isOpen, onClose, item, authFetch, onItemDeleted 
           </div>
         </div>
 
-        <div className="px-8 py-6 bg-surface-container-low border-t border-outline-variant/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-error hover:bg-error/5 rounded-lg transition-colors w-full sm:w-auto justify-center">
-            <span className="material-symbols-outlined text-lg">delete</span>
-            Delete Item
+        {/* Modal Footer */}
+        <div className="px-5 sm:px-6 py-4 bg-[#e0e0e0] dark:bg-[#111111] border-t-[3px] border-black dark:border-white flex flex-col sm:flex-row items-center justify-between gap-4">
+          <button 
+            onClick={handleDelete} 
+            className="flex items-center gap-1.5 px-4 py-2 border-2 border-red-600 bg-[#f5f5f5] dark:bg-[#0a0a0a] text-red-600 text-xs font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-colors w-full sm:w-auto justify-center shadow-[3px_3px_0_0_rgba(220,38,38,1)] active:shadow-none active:translate-y-0.5 focus:outline-none"
+          >
+            <span className="material-symbols-outlined text-[18px]">delete</span>
+            Purge 
           </button>
+          
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             <button 
               onClick={onClose}
-              className="px-5 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
+              className="px-4 py-2 border-2 border-black dark:border-white text-black dark:text-white text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all w-full sm:w-auto justify-center focus:outline-none"
             >
-              Cancel
+              Abort
             </button>
-            <button disabled={isSaving} onClick={handleSave} className="px-6 py-2 bg-primary text-on-primary font-semibold rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all disabled:opacity-50">
-              {isSaving ? "Saving..." : "Save Changes"}
+            <button 
+              disabled={isSaving} 
+              onClick={handleSave} 
+              className="px-5 py-2 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-all shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0_0_rgba(255,255,255,1)] active:shadow-none active:translate-y-0.5 w-full sm:w-auto justify-center disabled:opacity-50 focus:outline-none"
+            >
+              {isSaving ? "Syncing..." : "Commit"}
             </button>
           </div>
         </div>

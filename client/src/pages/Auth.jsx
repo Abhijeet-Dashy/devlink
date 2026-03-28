@@ -39,122 +39,90 @@ export default function AuthPage() {
     setLoading(false);
   };
 
-  // Custom inline styles converted from your CSS
-  const architecturalGridStyle = {
-    backgroundSize: "40px 40px",
-    backgroundImage: `
-      linear-gradient(to right, rgba(178, 177, 188, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(178, 177, 188, 0.05) 1px, transparent 1px)
-    `,
-  };
-
-  const meshGradientStyle = {
-    background: `
-      radial-gradient(at 0% 0%, rgba(73, 88, 172, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(150, 165, 255, 0.05) 0px, transparent 50%)
-    `,
-  };
-
   return (
-    <main className="flex min-h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
-      {/* Left Panel: Editorial Architectural Branding (40%) */}
-      <section
-        className="hidden md:flex md:w-[40%] sticky top-0 h-screen flex-col justify-between p-12 lg:p-20 overflow-hidden relative"
-        style={{ ...architecturalGridStyle, ...meshGradientStyle }}
-      >
-        <div className="z-10">
+    <main className="flex min-h-screen font-inter bg-[#f5f5f5] dark:bg-[#0a0a0a] text-black dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
+      {/* Left Panel: Editorial Visual (45%) */}
+      <section className="hidden lg:flex w-[45%] sticky top-0 h-screen flex-col justify-between p-12 border-r-[3px] border-black dark:border-white relative bg-[#e0e0e0] dark:bg-[#111111] transition-colors">
+        {/* Halftone & Grain Background */}
+        <div className="absolute inset-0 halftone-bg opacity-40 dark:opacity-20 pointer-events-none"></div>
+        <div className="absolute inset-0 grain-overlay opacity-[0.04] dark:opacity-[0.06] pointer-events-none"></div>
+
+        <div className="z-10 relative">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <span
-                className="material-symbols-outlined text-on-primary"
-                style={{ fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
-              >
-                architecture
-              </span>
-            </div>
-            <span className="text-xl font-bold tracking-tighter text-indigo-900">
+            <span className="text-2xl font-black tracking-tighter uppercase border-[3px] border-black dark:border-white px-3 py-1 bg-[#f5f5f5] dark:bg-[#0a0a0a] shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] transition-colors">
               DevLink
             </span>
           </div>
         </div>
 
-        <div className="relative z-10 max-w-md">
-          <h1 className="text-6xl lg:text-7xl font-black text-primary leading-[1.1] tracking-tighter mb-8">
-            Join the <span className="text-on-surface">Movement.</span>
+        <div className="relative z-10">
+          <h1 className="text-7xl font-black leading-[0.9] tracking-tighter mb-8 uppercase text-black dark:text-white transition-colors">
+            The<br/>Architects<br/>Of Code.
           </h1>
-          <p className="text-lg text-on-surface-variant leading-relaxed max-w-xs">
-            Architect your professional network with precision and intent.
+          <p className="text-lg font-bold max-w-sm text-gray-600 dark:text-gray-300 border-l-[4px] border-black dark:border-white pl-4 transition-colors">
+            Curate your technical identity. Build your library. Shape your legacy.
           </p>
         </div>
 
-        <div className="z-10 flex gap-6 items-center">
-          <div className="flex -space-x-4">
-            <img
-              className="w-12 h-12 rounded-full border-4 border-surface object-cover"
-              alt="Professional female architect"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBezrROHC1H1tcIIEJa0QkxXaLHpv7uwHg6aau7RzaFwCDijuFes2EoOF18Q4EdyUN8aiovqLa_fROfvGkoeRcpKoC2RVlzu4CZgnWxWjfKY2r3GcE2Zc-gafJ1o3DpvNatR6kjrnE_8IpxkstmtaQtEfmEaYMZYOCucvcG5LeGpMBnPjU1T1OuxQkrRHqgxvrNN3Tcsa7UjC5aB_TJkSSnS51zqWrGAiGE7pppfAklPMX_YLRuNm9YZ41grte_7z_QavD_OtcPOQ"
-            />
-            <img
-              className="w-12 h-12 rounded-full border-4 border-surface object-cover"
-              alt="Young male software developer"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2GhjArircMn-qqmb_5o1n56wm8ElUkciCAlXeUVZ1PruKxjz1vqBafXjeNbjAS7fGMVc0XN-gcgoXi1nVRq2U7vTbb9ATV7PGAnUfXuWr6NzGmykdHlBs9V4bzlhc4E7_m-XOq8N6kvnXQV8KlAyLJUTSjdCVISwLmYYjiBpnXQBYQx41P9RCOh-J6u0exARzqISVyTfpwBcQTCmSB7K9RwYfiwEufy2iRuK8cuYfMdRZFKVivjVTU8VZDioJnC6U-z1UODceHQ"
-            />
-            <img
-              className="w-12 h-12 rounded-full border-4 border-surface object-cover"
-              alt="Creative professional"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsVlhVQNJdoRhHjzmJwVVxxD_QjcCJZ0e3AZoDfoIDjvU3a51xA1S6myDaE2WBgDoleVCjue8vwimVRLWycBYIDiZ1_L6hqFx8DexDHEyXTPJBAjVjVn8e4VoGpAJDnvcQouL25fm_yeUSIkkbDkLAbMlgb9vZEZjCuq-C2ErFdvdJcpV1IBEGEIlLHl7QCQh_pgzmHV3wh1nwGPWIlDlkZs7uxUVuO-eu_bM4S1a7Cg7tHTw2IwbHfj0DTFh-6VzC-lEc9-L14w"
-            />
-          </div>
-          <span className="text-sm font-medium text-on-surface-variant">
-            2k+ professionals joined today
+        <div className="z-10 relative flex items-center justify-between border-t-[3px] border-black dark:border-white pt-6 transition-colors">
+          <span className="text-sm font-black uppercase tracking-widest text-black dark:text-white transition-colors">
+            EST. 2026
+          </span>
+          <span className="text-sm font-black uppercase tracking-widest text-black dark:text-white transition-colors">
+            EDITION 01
           </span>
         </div>
-
-        {/* Decorative background elements */}
-        <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 -right-20 w-64 h-64 bg-tertiary-container/10 rounded-full blur-3xl"></div>
+        
+        {/* Decorative Grid Accent */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-32 border-y-[3px] border-l-[3px] border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] flex flex-col transition-colors">
+           <div className="flex-1 border-b-[3px] border-black dark:border-white"></div>
+           <div className="flex-1 border-b-[3px] border-black dark:border-white"></div>
+           <div className="flex-1"></div>
+        </div>
       </section>
 
-      {/* Right Panel: Interaction Layer (60%) */}
-      <section className="w-full md:w-[60%] flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-surface-container-low relative">
-        {/* Mobile Logo Only */}
-        <div className="absolute top-8 left-8 md:hidden">
-          <span className="text-2xl font-black tracking-tighter text-primary">
+      {/* Right Panel: Form Area (55%) */}
+      <section className="w-full lg:w-[55%] flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
+        <div className="absolute inset-0 grain-overlay opacity-[0.02] dark:opacity-[0.04] pointer-events-none"></div>
+
+        {/* Mobile Header elements if needed */}
+        <div className="absolute top-8 left-8 lg:hidden z-20">
+          <span className="text-2xl font-black tracking-tighter uppercase px-2 py-1 bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] transition-colors">
             DevLink
           </span>
         </div>
 
-        {/* Glassmorphic Auth Card */}
-        <div className="w-full max-w-md bg-white/70 backdrop-blur-3xl rounded-[2rem] p-8 md:p-12 shadow-[0px_24px_48px_rgba(49,50,59,0.06)] border border-white/40">
-          <div className="mb-10 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-on-surface mb-2">
-              {isLogin ? "Welcome Back" : "Create Account"}
+        <div className="w-full max-w-md relative z-10 mt-16 lg:mt-0">
+          <div className="mb-12">
+            <h2 className="text-4xl sm:text-5xl font-black tracking-tight uppercase mb-4 text-black dark:text-white transition-colors">
+              {isLogin ? "Welcome Back" : "Join Us"}
             </h2>
-            <p className="text-on-surface-variant">
+            <p className="text-gray-600 dark:text-gray-400 font-bold text-lg transition-colors">
               {isLogin
-                ? "Continue your architectural journey"
-                : "Start building your technical library"}
+                ? "Continue the documentation."
+                : "Initialize your structural vault."}
             </p>
           </div>
 
-          {/* Toggle Pill */}
-          <div className="flex p-1.5 bg-surface-container-high rounded-2xl mb-10 relative">
+          {/* Toggle Button */}
+          <div className="flex border-[3px] border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] mb-10 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] overflow-hidden transition-colors">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-3 text-sm font-semibold transition-all duration-300 rounded-xl ${
+              className={`flex-1 py-4 text-sm font-black uppercase tracking-widest transition-all ${
                 isLogin
-                  ? "bg-white text-primary shadow-sm"
-                  : "text-on-surface-variant hover:text-on-surface"
+                  ? "bg-black dark:bg-white text-white dark:text-black"
+                  : "bg-transparent text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              Login
+              Sign In
             </button>
+            <div className="w-[3px] bg-black dark:bg-white transition-colors"></div>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-3 text-sm font-semibold transition-all duration-300 rounded-xl ${
+              className={`flex-1 py-4 text-sm font-black uppercase tracking-widest transition-all ${
                 !isLogin
-                  ? "bg-white text-primary shadow-sm"
-                  : "text-on-surface-variant hover:text-on-surface"
+                  ? "bg-black dark:bg-white text-white dark:text-black"
+                  : "bg-transparent text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
             >
               Register
@@ -165,17 +133,14 @@ export default function AuthPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             
             {!isLogin && (
-              <div className="space-y-1.5 relative">
-                <label className="text-xs font-bold tracking-widest uppercase text-on-surface-variant ml-1">
+              <div className="space-y-2">
+                <label className="text-sm font-black tracking-widest uppercase text-black dark:text-white block transition-colors">
                   Username
                 </label>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">
-                    person
-                  </span>
                   <input
-                    className="w-full bg-surface-container-low border-0 rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
-                    placeholder="johndoe"
+                    className="w-full bg-[#f5f5f5] dark:bg-[#0a0a0a] border-[3px] border-black dark:border-white py-4 px-4 text-black dark:text-white font-medium placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[6px_6px_0_0_rgba(255,255,255,1)] transition-all"
+                    placeholder="Enter your username"
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -185,16 +150,13 @@ export default function AuthPage() {
               </div>
             )}
 
-            <div className="space-y-1.5 relative">
-              <label className="text-xs font-bold tracking-widest uppercase text-on-surface-variant ml-1">
+            <div className="space-y-2">
+              <label className="text-sm font-black tracking-widest uppercase text-black dark:text-white block transition-colors">
                 Email Address
               </label>
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">
-                  alternate_email
-                </span>
                 <input
-                  className="w-full bg-surface-container-low border-0 rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                  className="w-full bg-[#f5f5f5] dark:bg-[#0a0a0a] border-[3px] border-black dark:border-white py-4 px-4 text-black dark:text-white font-medium placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[6px_6px_0_0_rgba(255,255,255,1)] transition-all"
                   placeholder="name@company.com"
                   type="email"
                   value={email}
@@ -204,14 +166,14 @@ export default function AuthPage() {
               </div>
             </div>
 
-            <div className="space-y-1.5 relative">
+            <div className="space-y-2">
               <div className="flex justify-between items-end">
-                <label className="text-xs font-bold tracking-widest uppercase text-on-surface-variant ml-1">
+                <label className="text-sm font-black tracking-widest uppercase text-black dark:text-white block transition-colors">
                   Password
                 </label>
                 {isLogin && (
                   <a
-                    className="text-xs font-semibold text-primary hover:text-primary-dim"
+                    className="text-xs font-black uppercase text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white underline decoration-2 underline-offset-4 transition-colors"
                     href="#"
                   >
                     Forgot?
@@ -219,11 +181,8 @@ export default function AuthPage() {
                 )}
               </div>
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">
-                  lock_open
-                </span>
                 <input
-                  className="w-full bg-surface-container-low border-0 rounded-xl py-4 pl-12 pr-12 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                  className="w-full bg-[#f5f5f5] dark:bg-[#0a0a0a] border-[3px] border-black dark:border-white py-4 pl-4 pr-12 text-black dark:text-white font-medium placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-0 focus:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[6px_6px_0_0_rgba(255,255,255,1)] transition-all"
                   placeholder="••••••••"
                   type={showPassword ? "text" : "password"}
                   value={password}
@@ -231,25 +190,25 @@ export default function AuthPage() {
                   required
                 />
                 <button
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <span className="material-symbols-outlined text-xl">
+                  <span className="material-symbols-outlined text-2xl">
                     {showPassword ? "visibility_off" : "visibility"}
                   </span>
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 py-2">
+            <div className="flex items-center gap-3 py-4">
               <input
-                className="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer"
+                className="w-6 h-6 border-[3px] border-black dark:border-white appearance-none checked:bg-black dark:checked:bg-white checked:after:content-['✓'] checked:after:text-white dark:checked:after:text-black checked:after:font-bold checked:after:block checked:after:text-center checked:after:select-none cursor-pointer transition-colors"
                 id="remember"
                 type="checkbox"
               />
               <label
-                className="text-sm font-medium text-on-surface-variant select-none cursor-pointer"
+                className="text-sm font-bold text-gray-600 dark:text-gray-400 scale-y-95 cursor-pointer transition-colors"
                 htmlFor="remember"
               >
                 {isLogin ? "Stay signed in for 30 days" : "I agree to the Terms & Privacy Policy"}
@@ -258,30 +217,30 @@ export default function AuthPage() {
 
             <button
               disabled={loading}
-              className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dim hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:hover:-translate-y-0"
+              className="w-full bg-black dark:bg-[#1a1a1a] text-[#f5f5f5] dark:text-white font-black uppercase tracking-widest py-5 border-[3px] border-black dark:border-white shadow-[8px_8px_0_0_rgba(107,114,128,0.5)] dark:shadow-[8px_8px_0_0_rgba(107,114,128,0.5)] hover:shadow-[12px_12px_0_0_rgba(107,114,128,0.8)] dark:hover:shadow-[12px_12px_0_0_rgba(150,150,150,0.8)] hover:-translate-y-1 transition-all duration-200 disabled:opacity-70 disabled:hover:-translate-y-0 disabled:hover:shadow-[8px_8px_0_0_rgba(107,114,128,0.5)] active:translate-y-1 active:shadow-none"
               type="submit"
             >
               {loading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Please wait...</span>
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-5 h-5 border-[3px] border-transparent border-t-[#f5f5f5] dark:border-t-white rounded-full animate-spin"></div>
+                  <span>Waiting...</span>
                 </div>
-              ) : (isLogin ? "Sign In to DevLink" : "Create Account")}
+              ) : (isLogin ? "Authenticate" : "Create Account")}
             </button>
           </form>
-        </div>
 
-        {/* Footer links */}
-        <div className="absolute bottom-8 flex gap-8 text-xs font-bold tracking-widest uppercase text-outline-variant">
-          <a className="hover:text-on-surface transition-colors" href="#">
-            Privacy
-          </a>
-          <a className="hover:text-on-surface transition-colors" href="#">
-            Terms
-          </a>
-          <a className="hover:text-on-surface transition-colors" href="#">
-            Security
-          </a>
+          {/* Footer links */}
+          <div className="mt-16 flex gap-6 text-xs font-black tracking-widest uppercase text-gray-500 dark:text-gray-500 justify-center lg:justify-start">
+            <a className="hover:text-black dark:hover:text-white transition-colors" href="#">
+              Privacy
+            </a>
+            <a className="hover:text-black dark:hover:text-white transition-colors" href="#">
+              Terms
+            </a>
+            <a className="hover:text-black dark:hover:text-white transition-colors" href="#">
+              Security
+            </a>
+          </div>
         </div>
       </section>
     </main>

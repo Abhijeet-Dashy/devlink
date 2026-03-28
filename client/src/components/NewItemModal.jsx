@@ -50,23 +50,23 @@ export default function NewItemModal({ isOpen, onClose, folderId, onItemCreated 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add New Item">
+    <Modal isOpen={isOpen} onClose={onClose} title="Initialize Item">
       <form onSubmit={handleSubmit} className="space-y-4">
         
         <div className="space-y-2">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-            Type
+          <label className="block text-[9px] font-black text-black dark:text-white uppercase tracking-widest border-b-2 border-black dark:border-white pb-1">
+            Resource Type
           </label>
-          <div className="flex gap-2">
-            {['text', 'link', 'image'].map(t => (
+          <div className="flex border-2 border-black dark:border-white shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]">
+            {['text', 'link', 'image'].map((t, index) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setType(t)}
-                className={`flex-1 py-2 text-sm font-bold capitalize rounded-lg transition-colors border ${
+                className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest transition-colors ${index !== 2 ? 'border-r-2 border-black dark:border-white' : ''} ${
                   type === t 
-                  ? 'border-primary bg-primary/5 text-primary' 
-                  : 'border-slate-200 text-slate-500 hover:bg-slate-50'
+                  ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-black' 
+                  : 'bg-[#f5f5f5] dark:bg-[#0a0a0a] text-gray-500 hover:text-black dark:hover:text-white'
                 }`}
               >
                 {t}
@@ -76,54 +76,49 @@ export default function NewItemModal({ isOpen, onClose, folderId, onItemCreated 
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-            Content / Title
+          <label className="block text-[9px] font-black text-black dark:text-white uppercase tracking-widest border-b-2 border-black dark:border-white pb-1">
+            Data Source / Content
           </label>
           <input
             type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             disabled={isSubmitting}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
-            placeholder={type === 'link' ? "https://example.com" : type === 'image' ? "Image URL or title" : "Title..."}
+            className="w-full bg-[#e0e0e0] dark:bg-[#111111] border-2 border-black dark:border-white px-3 py-2.5 text-xs font-bold text-black dark:text-white placeholder:text-gray-500 focus:bg-[#f5f5f5] dark:focus:bg-[#0a0a0a] focus:shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0_0_rgba(255,255,255,1)] transition-all outline-none"
+            placeholder={type === 'link' ? "HTTPS://..." : type === 'image' ? "IMAGE URL..." : "ENTER TEXT BLOCK..."}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-            Note (Optional)
+          <label className="block text-[9px] font-black text-black dark:text-white uppercase tracking-widest border-b-2 border-black dark:border-white pb-1">
+            Internal Note (Optional)
           </label>
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
             disabled={isSubmitting}
             rows={3}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none"
-            placeholder="Add some details..."
+            className="w-full bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white px-3 py-2.5 text-xs font-bold text-black dark:text-white placeholder:text-gray-500 focus:shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0_0_rgba(255,255,255,1)] transition-all outline-none resize-none"
+            placeholder="ADD DETAILS OR CONTEXT..."
           />
         </div>
 
-        <div className="flex gap-3 justify-end pt-4">
+        <div className="flex gap-3 justify-end pt-3 border-t-2 border-gray-300 dark:border-gray-700 mt-2">
           <button
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+            className="px-4 py-2 border-2 border-black dark:border-white text-black dark:text-white text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
           >
-            Cancel
+            Abort
           </button>
           <button
             type="submit"
             disabled={isSubmitting || !content.trim()}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white shadow-md shadow-primary/20 hover:opacity-90 disabled:opacity-50 disabled:shadow-none transition-all flex items-center gap-2"
+            className="flex items-center gap-2 px-5 py-2 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)] hover:shadow-[5px_5px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0_0_rgba(255,255,255,1)] active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
           >
-            {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                Saving...
-              </>
-            ) : 'Save Item'}
+            {isSubmitting ? 'Syncing...' : 'Commit'}
           </button>
         </div>
       </form>

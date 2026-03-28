@@ -48,157 +48,145 @@ export default function Dashboard() {
     document.documentElement.classList.toggle("dark");
   };
 
-  const meshGradientBg = {
-    backgroundImage: `
-      radial-gradient(at 0% 0%, rgba(73, 75, 214, 0.03) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(74, 83, 107, 0.03) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(73, 75, 214, 0.02) 0px, transparent 50%)
-    `,
-  };
-
-  const ghostBorder = {
-    border: "1px solid rgba(171, 179, 183, 0.15)",
-  };
-
   return (
-    <div className="bg-background dark:bg-black font-body text-on-surface dark:text-white antialiased overflow-hidden flex h-screen w-full">
+    <div className="bg-[#e5e5e5] dark:bg-[#1a1a1a] font-inter text-black dark:text-white antialiased overflow-hidden flex h-screen w-full transition-colors relative selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+      {/* Global Halftone Overlay */}
+      <div className="absolute inset-0 halftone-bg opacity-30 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen z-0"></div>
+
       {/* SideNavBar */}
-      <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 p-4 gap-2 h-screen w-64 bg-slate-50 dark:bg-black z-40">
+      <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 p-4 gap-4 h-screen w-64 bg-[#f5f5f5] dark:bg-[#0a0a0a] border-r-2 border-black dark:border-white z-40 transition-colors">
         {/* Header Section */}
-        <div className="flex items-center gap-3 px-3 py-6">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+        <div className="flex items-center gap-3 mt-2 px-2">
+          <div className="w-10 h-10 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)] flex items-center justify-center text-black dark:text-white">
             <span className="material-symbols-outlined text-2xl">grid_view</span>
           </div>
           <div>
             <Link to="/">
-              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none hover:text-primary transition-colors">
+              <h1 className="text-xl font-black text-black dark:text-white tracking-tighter uppercase mb-0.5">
                 DevLink
               </h1>
             </Link>
-            <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mt-1">
-              Personal Workspace
+            <p className="text-[9px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+              Workspace
             </p>
           </div>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 flex flex-col gap-1 mt-6 overflow-y-auto">
+        <nav className="flex-1 flex flex-col gap-1.5 mt-4 overflow-y-auto px-1">
           <Link
-            className="bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 ease-in-out"
+            className="bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)] px-3 py-2 flex items-center gap-2.5 transition-colors"
             to="/dashboard"
           >
-            <span
-              className="material-symbols-outlined"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
+            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
               grid_view
             </span>
-            <span className="text-sm font-medium Inter">Dashboard</span>
+            <span className="text-[11px] font-black uppercase tracking-widest">Dashboard</span>
           </Link>
           
+          <div className="h-3 border-l-2 border-black dark:border-white ml-5 my-1 opacity-20"></div>
+
           {loading ? (
-             <div className="py-8"><Loader size="sm" text="Loading folders..." /></div>
+             <div className="py-2"><Loader size="sm" text="Initializing..." /></div>
           ) : (
             folders.map((folder) => (
               <Link
                 key={folder._id}
-                className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
+                className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-[#0a0a0a] hover:bg-black/5 dark:hover:bg-white hover:border-black dark:hover:border-white border-2 border-transparent px-3 py-2 flex items-center gap-2.5 transition-colors"
                 to={`/folder/${folder._id}`}
               >
-                <span className="material-symbols-outlined">folder</span>
-                <span className="text-sm font-medium Inter truncate">{folder.name}</span>
+                <span className="material-symbols-outlined text-[18px]">folder</span>
+                <span className="text-[11px] font-black uppercase tracking-widest truncate">{folder.name}</span>
               </Link>
             ))
           )}
         </nav>
 
-        {/* Bottom CTA & Footer Actions */}
-        <div className="mt-auto flex flex-col gap-2">
+        <div className="mt-auto flex flex-col gap-2 py-3 border-t-2 border-black dark:border-white">
           <button 
             onClick={handleNewFolder}
-            className="w-full py-3 bg-primary text-on-primary font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/10 mb-4"
+            className="w-full py-2 bg-[#e5e5e5] dark:bg-[#1a1a1a] border-2 border-black dark:border-white text-black dark:text-white font-black text-[10px] uppercase tracking-widest hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)] hover:shadow-none hover:translate-y-0.5"
           >
-            <span className="material-symbols-outlined text-lg">add</span>
-            New Folder
+             CREATE FOLDER
           </button>
-          <a
-            className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
-            href="#"
-          >
-            <span className="material-symbols-outlined">settings</span>
-            <span className="text-sm font-medium Inter">Settings</span>
-          </a>
-          <a
-            className="text-slate-600 dark:text-slate-400 px-3 py-2 flex items-center gap-3 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 ease-in-out"
-            href="#"
-          >
-            <span className="material-symbols-outlined">delete</span>
-            <span className="text-sm font-medium Inter">Trash</span>
-          </a>
+          
+          <div className="flex justify-between items-center mt-2 px-1">
+             <button
+               className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white p-1.5 flex items-center gap-1.5 transition-colors uppercase text-[9px] font-black tracking-widest"
+               title="Settings"
+             >
+               <span className="material-symbols-outlined text-sm">settings</span> Set
+             </button>
+             <button
+               className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 p-1.5 flex items-center gap-1.5 transition-colors uppercase text-[9px] font-black tracking-widest"
+               title="Trash"
+             >
+               <span className="material-symbols-outlined text-sm">delete</span> Purge
+             </button>
+          </div>
         </div>
       </aside>
 
-      {/* Main Content Canvas */}
-      <main
-        className="flex-1 md:ml-64 flex flex-col h-screen overflow-y-auto relative"
-        style={meshGradientBg}
-      >
-        {/* TopNavBar */}
-        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-800/50 bg-white/90 dark:bg-black/90 backdrop-blur-md transition-all">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="relative w-full max-w-[240px]">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+      <main className="flex-1 md:ml-64 flex flex-col h-screen overflow-y-auto relative z-10">
+        
+        {/* Header */}
+        <header className="fixed top-0 left-0 right-0 md:left-64 z-40 h-14 flex justify-between items-center px-6 border-b-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] transition-colors">
+          <div className="flex items-center gap-3 flex-1">
+            <div className="relative w-full max-w-[280px]">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-lg">
                 search
               </span>
               <input
-                className="w-full bg-slate-100/50 border border-transparent rounded-lg pl-9 pr-3 py-1.5 text-sm focus:bg-white focus:border-slate-200 focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 font-sans outline-none transition-all"
-                placeholder="Search..."
+                className="w-full bg-[#e5e5e5] dark:bg-[#1a1a1a] border-2 border-black dark:border-white pl-9 pr-3 py-1.5 text-xs font-bold text-black dark:text-white focus:bg-white dark:focus:bg-black focus:shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0_0_rgba(255,255,255,1)] placeholder:text-gray-500 outline-none transition-all uppercase tracking-widest"
+                placeholder="Index query..."
                 type="text"
               />
             </div>
           </div>
-          <div className="flex items-center gap-2 ml-2">
+          
+          <div className="flex items-center gap-3 ml-3">
             <button
                onClick={toggleDarkMode}
-               className="p-1.5 text-slate-400 hover:text-primary transition-colors"
+               className="p-1.5 border-2 border-transparent hover:border-black dark:hover:border-white rounded-none transition-all text-black dark:text-white flex items-center justify-center"
                title="Toggle Dark Mode"
             >
-              <span className="material-symbols-outlined text-[18px]">dark_mode</span>
+              <span className="material-symbols-outlined text-[18px] font-bold">dark_mode</span>
             </button>
+            <div className="h-4 w-[2px] bg-black dark:bg-white opacity-20 mx-0.5"></div>
             <button
               onClick={logout}
-              className="p-1.5 text-slate-400 hover:text-error hover:bg-error/10 rounded-lg transition-all flex items-center"
+              className="p-1.5 border-2 border-transparent hover:border-red-600 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-500 transition-all flex items-center text-black dark:text-white"
               title="Logout"
             >
-              <span className="material-symbols-outlined text-[18px]">logout</span>
+              <span className="material-symbols-outlined text-[18px] font-bold">logout</span>
             </button>
-            <div className="h-4 w-px bg-slate-200 mx-1"></div>
-            <div className="flex items-center gap-2">
-              <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-slate-700 leading-none">
+            <div className="flex items-center gap-2 bg-[#e5e5e5] dark:bg-[#1a1a1a] border-2 border-black dark:border-white px-2 py-1 shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]">
+              <div className="text-right hidden sm:block px-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-black dark:text-white leading-none">
                   {user?.username || 'User'}
                 </p>
               </div>
-              <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center ring-1 ring-primary/20 shadow-sm uppercase text-xs ml-1">
+              <div className="w-5 h-5 bg-black dark:bg-white text-white dark:text-black font-black flex items-center justify-center uppercase text-[10px]">
                 {user?.username?.[0] || 'U'}
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page Body */}
-        <section className="flex-1 flex flex-col items-center px-6 pt-24 pb-16 w-full max-w-7xl mx-auto">
+        <section className="flex-1 flex flex-col px-6 pt-24 pb-12 w-full max-w-6xl mx-auto relative z-10">
           {items.length > 0 ? (
             <div className="w-full">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                 <div>
-                  <h2 className="text-3xl font-extrabold text-on-surface dark:text-white tracking-tighter">
-                    Dashboard
+                  <h2 className="text-3xl md:text-4xl font-black text-black dark:text-white tracking-tighter uppercase mb-1">
+                    Console.
                   </h2>
-                  <p className="text-on-surface-variant dark:text-slate-300 mt-1">Your entire knowledge vault.</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">
+                     SYSTEM DASHBOARD & UNIVERSAL INDEX
+                  </p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
                 {items.map((item, idx) => {
                   const folder = folders.find(f => f._id === item.folderId);
                   return (
@@ -217,81 +205,43 @@ export default function Dashboard() {
               </div>
             </div>
           ) : (
-          <div className="max-w-2xl w-full text-center space-y-12 my-auto">
-            {/* Asymmetric Decorative Element */}
-            <div className="relative inline-block mx-auto">
-              <div
-                className="w-64 h-64 mx-auto bg-surface-container rounded-3xl rotate-3 flex items-center justify-center shadow-sm"
-                style={ghostBorder}
-              >
-                <div className="w-48 h-48 bg-surface-container-lowest rounded-2xl -rotate-6 flex flex-col items-center justify-center shadow-2xl shadow-slate-200/60 p-6 relative overflow-hidden group">
-                  {/* Mesh gradient inside the illustration */}
-                  <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-primary to-transparent"></div>
-                  <span className="material-symbols-outlined text-5xl text-primary/40 mb-4">
-                    cloud_off
-                  </span>
-                  <div className="w-full space-y-2 relative z-10">
-                    <div className="h-1.5 w-full bg-slate-100 rounded-full"></div>
-                    <div className="h-1.5 w-3/4 bg-slate-100 rounded-full"></div>
-                    <div className="h-1.5 w-1/2 bg-slate-100 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-              {/* Secondary accent floating shape */}
-              <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary-container rounded-2xl flex items-center justify-center text-primary shadow-lg shadow-primary/10">
-                <span className="material-symbols-outlined">draw</span>
-              </div>
-            </div>
-
+          <div className="max-w-xl w-full text-center space-y-8 my-auto mx-auto bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-10 shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)]">
             <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-headline font-extrabold text-on-surface dark:text-white tracking-tight leading-tight">
-                The canvas is <span className="text-primary italic">open.</span>
+              <h2 className="text-4xl form-black text-black dark:text-white tracking-tighter uppercase leading-[0.9]">
+                VOID DETECTED.
               </h2>
-              <p className="text-on-surface-variant dark:text-slate-300 text-lg md:text-xl max-w-lg mx-auto font-body leading-relaxed">
-                No items yet. Start by adding your first snippet or link to
-                build your personal knowledge vault.
+              <p className="text-gray-600 dark:text-gray-400 text-xs font-bold uppercase tracking-widest mx-auto leading-relaxed">
+                Vault is currently empty. Initialize your library by constructing a folder grouping.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button onClick={handleNewFolder} className="px-8 py-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary font-bold text-lg rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  create_new_folder
-                </span>
-                Create Folder
+            <div className="flex justify-center pt-2">
+              <button onClick={handleNewFolder} className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-black text-xs uppercase tracking-widest border-2 border-black dark:border-white flex items-center gap-2 shadow-[4px_4px_0_0_rgba(107,114,128,0.5)] hover:shadow-[6px_6px_0_0_rgba(107,114,128,0.5)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transition-all">
+                <span className="material-symbols-outlined font-bold text-xl">create_new_folder</span>
+                INITIALIZE
               </button>
             </div>
 
-            {/* Subtle Footer Metadata for Architectural Feel */}
-            <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left border-t border-slate-200/60 opacity-60">
+            <div className="pt-8 grid grid-cols-3 gap-6 text-left border-t-2 border-black dark:border-white">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                  Vault Integrity
+                <p className="text-[9px] font-black uppercase tracking-widest text-black dark:text-white mb-1.5 underline decoration-2 underline-offset-2">
+                  Integrity
                 </p>
-                <p className="text-xs font-medium text-slate-600">
-                  All snippets are encrypted and mirrored across your
-                  architectural nodes.
-                </p>
+                <p className="text-[10px] font-bold text-gray-500">Encrypted nodes standing by.</p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                  Workflow Sync
+                <p className="text-[9px] font-black uppercase tracking-widest text-black dark:text-white mb-1.5 underline decoration-2 underline-offset-2">
+                  Sync
                 </p>
-                <p className="text-xs font-medium text-slate-600">
-                  Connect GitHub or GitLab to automatically ingest your
-                  most-used templates.
-                </p>
+                <p className="text-[10px] font-bold text-gray-500">Link nodes disconnected.</p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                  System Status
+                <p className="text-[9px] font-black uppercase tracking-widest text-black dark:text-white mb-1.5 underline decoration-2 underline-offset-2">
+                  Status
                 </p>
-                <p className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                  Architecture core active and responsive.
+                <p className="text-[10px] font-bold text-gray-500 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-black dark:bg-white animate-pulse"></span>
+                  Core active.
                 </p>
               </div>
             </div>
@@ -300,31 +250,30 @@ export default function Dashboard() {
         </section>
       </main>
 
-      {/* Mobile Navigation (Visible only on small screens) */}
-      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] bg-white/90 backdrop-blur-xl rounded-2xl flex justify-around items-center py-4 shadow-2xl shadow-slate-300 z-50 border border-white/50">
-        <Link className="text-primary flex flex-col items-center gap-1" to="/dashboard">
-          <span
-            className="material-symbols-outlined"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
+      {/* Mobile Navigation Shell */}
+      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white flex justify-around items-center py-3 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] z-50">
+        <Link className="text-black dark:text-white flex flex-col items-center gap-0.5" to="/dashboard">
+          <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>
             grid_view
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter">
-            Dashboard
+          <span className="text-[9px] font-black uppercase tracking-widest">
+            Home
           </span>
         </Link>
-        <div className="relative -top-8 ml-auto mr-auto">
-          <button onClick={handleNewFolder} className="w-14 h-14 bg-primary text-white rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center transform transition-transform active:scale-90">
-            <span className="material-symbols-outlined text-3xl">create_new_folder</span>
+        <div className="relative -top-6 ml-auto mr-auto">
+          <button onClick={handleNewFolder} className="w-12 h-12 bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white rounded-none shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] flex items-center justify-center transform transition-transform active:translate-y-0.5 active:shadow-none">
+            <span className="material-symbols-outlined font-bold text-2xl">add</span>
           </button>
         </div>
-        <button onClick={logout} className="text-slate-400 flex flex-col items-center gap-1">
-          <span className="material-symbols-outlined">logout</span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter">
-            Logout
+        <button onClick={logout} className="text-gray-500 hover:text-red-500 flex flex-col items-center gap-0.5 transition-colors">
+          <span className="material-symbols-outlined font-bold text-[20px]">logout</span>
+          <span className="text-[9px] font-black uppercase tracking-widest">
+            Exit
           </span>
         </button>
       </nav>
+      
+      {/* Modals */}
       <NewFolderModal 
         isOpen={isNewFolderModalOpen} 
         onClose={() => setIsNewFolderModalOpen(false)} 

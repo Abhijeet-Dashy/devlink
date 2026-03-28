@@ -51,7 +51,12 @@ module.exports = {
         "on-secondary-fixed-variant": "#38485d",
         "tertiary-fixed-dim": "#ffb695",
         "primary-fixed-dim": "#c0c1ff",
-        "on-primary-fixed-variant": "#2f2ebe"
+        "on-primary-fixed-variant": "#2f2ebe",
+        "brand-offwhite": "#F5F5F5",
+        "brand-black": "#000000",
+        "brand-gray": "#6B7280",
+        "brand-indigo": "#4f46e5",
+        "brand-indigo-dim": "#4338ca",
       },
     },
   },

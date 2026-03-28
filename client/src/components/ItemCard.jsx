@@ -5,84 +5,55 @@ const ItemCard = memo(function ItemCard({
   description,
   tags = [],
   icon,
-  color = "primary", // "primary", "secondary", or "tertiary"
+  color = "primary", 
   imageSrc,
-  splitNode, // Used for the side-by-side Merge Sort layout
+  splitNode, 
   className = "",
-  children, // Used to inject custom content (like the Two Pointers code block)
-  onClick, // ADDED: onClick prop
+  children, 
+  onClick, 
 }) {
-  const glassPanelStyle = {
-    backdropFilter: "blur(12px)",
-    WebkitBackdropFilter: "blur(12px)",
-  };
-
-  // Map the color prop to your specific Tailwind utility classes
-  const colorStyles = {
-    primary: {
-      text: "text-primary",
-      bg: "bg-primary/10",
-      glow: "bg-primary/5 group-hover:bg-primary/10",
-    },
-    secondary: {
-      text: "text-secondary",
-      bg: "bg-secondary/10",
-      glow: "bg-secondary/5 group-hover:bg-secondary/10",
-    },
-    tertiary: {
-      text: "text-tertiary",
-      bg: "bg-tertiary/10",
-      glow: "bg-tertiary/5 group-hover:bg-tertiary/10",
-    },
-  };
-
-  const selectedColor = colorStyles[color] || colorStyles.primary;
-
   return (
     <div
-      onClick={onClick} // ADDED: Click handler
-      className={`group relative rounded-2xl border border-white/40 dark:border-white/10 bg-white/70 dark:bg-[#111111]/80 shadow-xl shadow-on-surface/5 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 overflow-hidden flex flex-col cursor-pointer ${
-        imageSrc ? "p-0" : "p-6"
+      onClick={onClick}
+      className={`group relative border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0_0_rgba(255,255,255,1)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer ${
+        imageSrc ? "p-0" : "p-4"
       } ${className}`}
-      style={glassPanelStyle}
     >
-      {/* Ambient Glow (Hidden if it's an image card) */}
+      {/* Decorative inner halftone accent on hover */}
       {!imageSrc && (
-        <div
-          className={`absolute -right-4 -top-4 w-24 h-24 rounded-full blur-2xl transition-colors ${selectedColor.glow}`}
-        ></div>
+        <div className="absolute top-0 right-0 w-24 h-24 halftone-bg opacity-0 group-hover:opacity-20 dark:group-hover:opacity-10 rounded-bl-full pointer-events-none transition-opacity duration-300"></div>
       )}
 
       {/* --- VARIATION 1: Image Header Card --- */}
       {imageSrc && (
         <>
-          <div className="h-32 w-full relative">
+          <div className="h-28 w-full relative border-b-2 border-black dark:border-white bg-[#ccc] dark:bg-[#222]">
             <img
               alt={title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
               src={imageSrc}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-white/90 dark:from-black/90 to-transparent"></div>
+            <div className="absolute inset-0 halftone-bg opacity-30 dark:opacity-20 mix-blend-color-burn dark:mix-blend-screen pointer-events-none group-hover:opacity-0 transition-opacity duration-300"></div>
           </div>
-          <div className="p-6 pt-2 flex-1 flex flex-col">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xl font-bold text-on-surface dark:text-white tracking-tight">
+          <div className="p-3 flex-1 flex flex-col">
+            <div className="flex justify-between items-start mb-1.5">
+              <h3 className="text-sm font-black text-black dark:text-white uppercase tracking-tight line-clamp-1">
                 {title}
               </h3>
-              <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-sm">
+              <span className="material-symbols-outlined text-black dark:text-white text-[12px] bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white px-0.5">
                 link
               </span>
             </div>
             {description && (
-              <p className="text-sm text-on-surface-variant dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed">
+              <p className="text-[10px] font-bold text-gray-600 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed">
                 {description}
               </p>
             )}
-            <div className="flex flex-wrap gap-2 mt-auto">
+            <div className="flex flex-wrap gap-1.5 mt-auto">
               {tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="px-2.5 py-1 bg-surface-container dark:bg-[#222] text-[11px] font-bold text-on-surface-variant dark:text-slate-300 rounded-md uppercase tracking-wider"
+                  className="px-1 py-0.5 bg-black dark:bg-white text-[9px] font-black text-[#f5f5f5] dark:text-black uppercase tracking-widest border border-black dark:border-white"
                 >
                   {tag}
                 </span>
@@ -94,14 +65,14 @@ const ItemCard = memo(function ItemCard({
 
       {/* --- VARIATION 2: Standard or Split Content Card --- */}
       {!imageSrc && (
-        <div className={`flex flex-col md:flex-row gap-6 h-full relative z-10`}>
+        <div className={`flex flex-col md:flex-row gap-3 h-full relative z-10`}>
           
           {/* Left / Main Column */}
           <div className="flex-1 flex flex-col">
-            <div className="flex justify-between items-start mb-4">
-              <div className={`p-2.5 rounded-xl ${selectedColor.bg}`}>
+            <div className="flex justify-between items-start mb-2.5">
+              <div className="p-1 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]">
                 <span
-                  className={`material-symbols-outlined ${selectedColor.text}`}
+                  className="material-symbols-outlined text-black dark:text-white text-sm"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
                   {icon}
@@ -109,37 +80,35 @@ const ItemCard = memo(function ItemCard({
               </div>
               {!splitNode && (
                 <button 
-                  // ADDED: Stop propagation so clicking the menu doesn't trigger the card modal
                   onClick={(e) => e.stopPropagation()} 
-                  className="text-on-surface-variant hover:text-on-surface relative z-20"
+                  className="text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-transparent hover:border-black dark:hover:border-white transition-colors relative z-20 px-0.5 py-0"
                 >
-                  <span className="material-symbols-outlined">more_horiz</span>
+                  <span className="material-symbols-outlined text-sm">more_horiz</span>
                 </button>
               )}
             </div>
 
-            <h3 className="text-xl font-bold text-on-surface dark:text-white mb-2 tracking-tight">
+            <h3 className="text-sm font-black text-black dark:text-white mb-1.5 uppercase tracking-tight line-clamp-2">
               {title}
             </h3>
 
             {description && (
               <p
-                className={`text-sm text-on-surface-variant dark:text-slate-300 leading-relaxed ${
-                  !splitNode ? "line-clamp-3 mb-6" : "mb-4"
+                className={`text-[10px] font-bold text-gray-600 dark:text-gray-400 leading-relaxed ${
+                  !splitNode ? "line-clamp-3 mb-3" : "mb-2"
                 }`}
               >
                 {description}
               </p>
             )}
 
-            {/* Custom inner content injected here */}
             {children}
 
-            <div className="flex flex-wrap gap-2 mt-auto relative z-10">
+            <div className="flex flex-wrap gap-1.5 mt-auto relative z-10 pt-1.5">
               {tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="px-2.5 py-1 bg-surface-container text-[11px] font-bold text-on-surface-variant rounded-md uppercase tracking-wider"
+                  className="px-1.5 py-0.5 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] text-black dark:text-white text-[8px] font-black uppercase tracking-widest"
                 >
                   {tag}
                 </span>
@@ -147,11 +116,10 @@ const ItemCard = memo(function ItemCard({
             </div>
           </div>
 
-          {/* Right Column (Only renders if splitNode is provided) */}
-          {splitNode && (
-            <div className="flex-1">
-              {splitNode}
-            </div>
+          {Object.keys(splitNode || {}).length > 0 && (
+             <div className="flex-1">
+               {splitNode}
+             </div>
           )}
         </div>
       )}

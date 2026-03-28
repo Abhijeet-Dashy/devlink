@@ -111,3 +111,35 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Halftone and Grain Utilities for Landing/Auth Pages */
+.halftone-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(#000000 1px, transparent 1px);
+  background-size: 6px 6px;
+  background-position: 0 0, 3px 3px;
+  opacity: 0.08;
+  z-index: 0;
+}
+
+html.dark .halftone-bg::before {
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  opacity: 0.15;
+}
+
+.halftone-bg {
+  position: relative;
+}
+
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  z-index: 10;
+}
