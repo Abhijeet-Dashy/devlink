@@ -13,7 +13,6 @@ const ItemCard = memo(function ItemCard({
   onClick, // ADDED: onClick prop
 }) {
   const glassPanelStyle = {
-    background: "rgba(255, 255, 255, 0.7)",
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
   };
@@ -42,7 +41,7 @@ const ItemCard = memo(function ItemCard({
   return (
     <div
       onClick={onClick} // ADDED: Click handler
-      className={`group relative rounded-2xl border border-white/40 shadow-xl shadow-on-surface/5 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 overflow-hidden flex flex-col cursor-pointer ${
+      className={`group relative rounded-2xl border border-white/40 dark:border-white/10 bg-white/70 dark:bg-[#111111]/80 shadow-xl shadow-on-surface/5 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 overflow-hidden flex flex-col cursor-pointer ${
         imageSrc ? "p-0" : "p-6"
       } ${className}`}
       style={glassPanelStyle}
@@ -63,19 +62,19 @@ const ItemCard = memo(function ItemCard({
               className="w-full h-full object-cover"
               src={imageSrc}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-white/90 dark:from-black/90 to-transparent"></div>
           </div>
           <div className="p-6 pt-2 flex-1 flex flex-col">
             <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xl font-bold text-on-surface tracking-tight">
+              <h3 className="text-xl font-bold text-on-surface dark:text-white tracking-tight">
                 {title}
               </h3>
-              <span className="material-symbols-outlined text-on-surface-variant text-sm">
+              <span className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-sm">
                 link
               </span>
             </div>
             {description && (
-              <p className="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
+              <p className="text-sm text-on-surface-variant dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed">
                 {description}
               </p>
             )}
@@ -83,7 +82,7 @@ const ItemCard = memo(function ItemCard({
               {tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="px-2.5 py-1 bg-surface-container text-[11px] font-bold text-on-surface-variant rounded-md uppercase tracking-wider"
+                  className="px-2.5 py-1 bg-surface-container dark:bg-[#222] text-[11px] font-bold text-on-surface-variant dark:text-slate-300 rounded-md uppercase tracking-wider"
                 >
                   {tag}
                 </span>
@@ -119,13 +118,13 @@ const ItemCard = memo(function ItemCard({
               )}
             </div>
 
-            <h3 className="text-xl font-bold text-on-surface mb-2 tracking-tight">
+            <h3 className="text-xl font-bold text-on-surface dark:text-white mb-2 tracking-tight">
               {title}
             </h3>
 
             {description && (
               <p
-                className={`text-sm text-on-surface-variant leading-relaxed ${
+                className={`text-sm text-on-surface-variant dark:text-slate-300 leading-relaxed ${
                   !splitNode ? "line-clamp-3 mb-6" : "mb-4"
                 }`}
               >

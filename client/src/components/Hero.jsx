@@ -114,8 +114,7 @@ const Hero = () => {
           </div>
 
           <div className="grid grid-cols-12 gap-6">
-            {/* Feature 1: Main Focus */}
-            <div className="col-span-12 md:col-span-8 bg-surface-container p-8 rounded-3xl border border-outline-variant/10 bg-gradient-to-br from-[#131b2e] to-[#0b1326] flex flex-col justify-between group overflow-hidden relative">
+            <div className="col-span-12 md:col-span-8 bg-surface-container p-8 rounded-3xl border border-outline-variant/10 bg-gradient-to-br from-[#131b2e] to-[#0b1326] dark:from-black dark:to-[#0a0a0a] flex flex-col justify-between group overflow-hidden relative">
               <div className="relative z-10">
                 <span className="material-symbols-outlined text-primary text-4xl mb-6">
                   grid_view

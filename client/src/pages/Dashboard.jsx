@@ -44,8 +44,11 @@ export default function Dashboard() {
     setIsNewFolderModalOpen(true);
   };
 
+  const toggleDarkMode = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const meshGradientBg = {
-    backgroundColor: "#f8f9fa",
     backgroundImage: `
       radial-gradient(at 0% 0%, rgba(73, 75, 214, 0.03) 0px, transparent 50%),
       radial-gradient(at 100% 0%, rgba(74, 83, 107, 0.03) 0px, transparent 50%),
@@ -58,18 +61,20 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-background font-body text-on-surface antialiased overflow-hidden flex h-screen w-full">
+    <div className="bg-background dark:bg-black font-body text-on-surface dark:text-white antialiased overflow-hidden flex h-screen w-full">
       {/* SideNavBar */}
-      <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 p-4 gap-2 h-screen w-64 bg-slate-50 dark:bg-slate-950 z-40">
+      <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 p-4 gap-2 h-screen w-64 bg-slate-50 dark:bg-black z-40">
         {/* Header Section */}
         <div className="flex items-center gap-3 px-3 py-6">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
             <span className="material-symbols-outlined text-2xl">grid_view</span>
           </div>
           <div>
-            <h1 className="text-xl font-black text-slate-900 dark:text-slate-50 tracking-tight leading-none">
-              DevLink
-            </h1>
+            <Link to="/">
+              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none hover:text-primary transition-colors">
+                DevLink
+              </h1>
+            </Link>
             <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mt-1">
               Personal Workspace
             </p>
@@ -79,7 +84,7 @@ export default function Dashboard() {
         {/* Navigation Links */}
         <nav className="flex-1 flex flex-col gap-1 mt-6 overflow-y-auto">
           <Link
-            className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 ease-in-out"
+            className="bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 ease-in-out"
             to="/dashboard"
           >
             <span
@@ -139,7 +144,7 @@ export default function Dashboard() {
         style={meshGradientBg}
       >
         {/* TopNavBar */}
-        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-all">
+        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-800/50 bg-white/90 dark:bg-black/90 backdrop-blur-md transition-all">
           <div className="flex items-center gap-4 flex-1">
             <div className="relative w-full max-w-[240px]">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
@@ -153,6 +158,13 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2 ml-2">
+            <button
+               onClick={toggleDarkMode}
+               className="p-1.5 text-slate-400 hover:text-primary transition-colors"
+               title="Toggle Dark Mode"
+            >
+              <span className="material-symbols-outlined text-[18px]">dark_mode</span>
+            </button>
             <button
               onClick={logout}
               className="p-1.5 text-slate-400 hover:text-error hover:bg-error/10 rounded-lg transition-all flex items-center"
@@ -180,10 +192,10 @@ export default function Dashboard() {
             <div className="w-full">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
                 <div>
-                  <h2 className="text-3xl font-extrabold text-on-surface tracking-tighter">
+                  <h2 className="text-3xl font-extrabold text-on-surface dark:text-white tracking-tighter">
                     Dashboard
                   </h2>
-                  <p className="text-on-surface-variant mt-1">Your entire knowledge vault.</p>
+                  <p className="text-on-surface-variant dark:text-slate-300 mt-1">Your entire knowledge vault.</p>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -232,10 +244,10 @@ export default function Dashboard() {
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-headline font-extrabold text-on-surface tracking-tight leading-tight">
+              <h2 className="text-4xl md:text-5xl font-headline font-extrabold text-on-surface dark:text-white tracking-tight leading-tight">
                 The canvas is <span className="text-primary italic">open.</span>
               </h2>
-              <p className="text-on-surface-variant text-lg md:text-xl max-w-lg mx-auto font-body leading-relaxed">
+              <p className="text-on-surface-variant dark:text-slate-300 text-lg md:text-xl max-w-lg mx-auto font-body leading-relaxed">
                 No items yet. Start by adding your first snippet or link to
                 build your personal knowledge vault.
               </p>

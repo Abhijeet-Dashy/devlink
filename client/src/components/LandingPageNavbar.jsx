@@ -1,13 +1,17 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../store/authStore'
 
 const LandingPageNavbar = () => {
+    const user = useAuthStore(state => state.user);
+    const navigate = useNavigate();
     const toggleDarkMode = () => {
     document.documentElement.classList.toggle("dark");
   };
   return (
     <nav
         className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-fit 
-                bg-white/70 dark:bg-[#111111]/70 
+                bg-white/70 dark:bg-black/70 
                 backdrop-blur-xl 
                 border border-white/20 dark:border-white/10
                 shadow-[0_10px_40px_rgba(0,0,0,0.08)] 
@@ -21,15 +25,15 @@ const LandingPageNavbar = () => {
             </span>
 
             <div className="hidden md:flex items-center gap-5 text-sm">
-              <a className="text-slate-500 hover:text-black dark:hover:text-white transition" href="/dashboard">
+              <Link className="text-slate-500 hover:text-black dark:hover:text-white transition" to="/dashboard">
                 Dashboard
-              </a>
-              <a className="text-slate-500 hover:text-black dark:hover:text-white transition" href="/snippets">
+              </Link>
+              <Link className="text-slate-500 hover:text-black dark:hover:text-white transition" to="/snippets">
                 Snippets
-              </a>
-              <a className="text-slate-500 hover:text-black dark:hover:text-white transition" href="/collections">
+              </Link>
+              <Link className="text-slate-500 hover:text-black dark:hover:text-white transition" to="/collections">
                 Collections
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -42,15 +46,28 @@ const LandingPageNavbar = () => {
             </button>
 
             {/* CTA */}
-            <button
-              className="px-4 py-1.5 rounded-full text-sm font-medium 
-                         bg-black text-white 
-                         dark:bg-white dark:text-black 
-                         hover:opacity-80 transition active:scale-95"
-              onClick={() => window.location.href = "/register"}
-            >  
-              Register
-            </button>
+            {user ? (
+              <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition pr-1">
+                <div className="text-right hidden sm:block">
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200 leading-none">
+                    {user.username || 'User'}
+                  </p>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center ring-1 ring-primary/20 shadow-sm uppercase text-sm">
+                  {user.username?.[0] || 'U'}
+                </div>
+              </Link>
+            ) : (
+              <button
+                className="px-4 py-1.5 rounded-full text-sm font-medium 
+                           bg-black text-white 
+                           dark:bg-white dark:text-black 
+                           hover:opacity-80 transition active:scale-95"
+                onClick={() => navigate("/register")}
+              >  
+                Register
+              </button>
+            )}
           </div>
         </div>
       </nav>

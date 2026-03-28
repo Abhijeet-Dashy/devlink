@@ -21,8 +21,11 @@ export default function FolderPage() {
   const [folders, setFolders] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const toggleDarkMode = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   const meshGradientStyle = {
-    backgroundColor: "#f8f9fa",
     backgroundImage: `
       radial-gradient(at 0% 0%, rgba(73, 75, 214, 0.1) 0px, transparent 50%),
       radial-gradient(at 100% 0%, rgba(206, 214, 245, 0.15) 0px, transparent 50%),
@@ -65,19 +68,21 @@ export default function FolderPage() {
 
   return (
     <div
-      className="bg-background font-body text-on-surface min-h-screen relative flex"
+      className="bg-background dark:bg-black font-body text-on-surface dark:text-white min-h-screen relative flex"
       style={meshGradientStyle}
     >
       {/* SideNavBar */}
-      <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 p-4 gap-2 h-screen w-64 bg-slate-50 dark:bg-slate-950 z-40">
+      <aside className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 p-4 gap-2 h-screen w-64 bg-slate-50 dark:bg-black z-40">
         <div className="flex items-center gap-3 px-3 py-6">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-lg shadow-primary/20">
             <span className="material-symbols-outlined text-2xl">grid_view</span>
           </div>
           <div>
-            <h1 className="text-xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
-              DevLink
-            </h1>
+            <Link to="/">
+              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight hover:text-primary transition-colors">
+                DevLink
+              </h1>
+            </Link>
             <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">
               {user?.username || 'Personal Workspace'}
             </p>
@@ -92,7 +97,7 @@ export default function FolderPage() {
           {folders.map(f => (
             <Link 
               key={f._id} 
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out ${f._id === folderId ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 relative after:content-[''] after:absolute after:-left-4 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-4 after:bg-[#494bd6] after:rounded-r" : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"}`} 
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out ${f._id === folderId ? "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 relative after:content-[''] after:absolute after:-left-4 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-4 after:bg-[#a855f7] after:rounded-r" : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"}`} 
               to={`/folder/${f._id}`}
             >
               <span className="material-symbols-outlined">folder</span>
@@ -122,7 +127,7 @@ export default function FolderPage() {
       {/* Main Content Area */}
       <main className="md:ml-64 min-h-screen relative flex flex-col w-full">
         {/* TopNavBar */}
-        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-all">
+        <header className="fixed top-0 left-0 right-0 md:left-64 z-50 h-14 flex justify-between items-center px-6 border-b border-slate-200/50 dark:border-slate-800/50 bg-white/90 dark:bg-black/90 backdrop-blur-md transition-all">
           <div className="flex items-center gap-4 flex-1">
             <div className="relative w-full max-w-[240px]">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
@@ -136,6 +141,13 @@ export default function FolderPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 ml-2">
+            <button
+               onClick={toggleDarkMode}
+               className="p-1.5 text-slate-400 hover:text-primary transition-colors"
+               title="Toggle Dark Mode"
+            >
+              <span className="material-symbols-outlined text-[18px]">dark_mode</span>
+            </button>
             <button
               onClick={logout}
               className="p-1.5 text-slate-400 hover:text-error hover:bg-error/10 rounded-lg transition-all flex items-center"
