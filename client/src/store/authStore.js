@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export const useAuthStore = create((set, get) => ({
   user: null,
   token: localStorage.getItem('token') || null,
@@ -22,7 +24,7 @@ export const useAuthStore = create((set, get) => ({
 
   login: async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -46,7 +48,7 @@ export const useAuthStore = create((set, get) => ({
 
   register: async (email, password, username) => {
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, username }),
@@ -87,7 +89,8 @@ export const useAuthStore = create((set, get) => ({
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(url, { ...options, headers });
+    const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
+    const response = await fetch(fullUrl, { ...options, headers });
     if (response.status === 401) {
       logout();
     }
