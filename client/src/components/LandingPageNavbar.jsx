@@ -11,7 +11,7 @@ const LandingPageNavbar = () => {
 
   return (
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-5xl px-4">
-      <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] rounded-xl font-inter flex justify-between items-center px-6 py-3 transition-colors">
+      <div className="bg-[#f5f5f5]/60 backdrop-blur-xl dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-2 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] rounded-xl font-inter flex justify-between items-center px-6 py-3 transition-colors">
         {/* LEFT */}
         <div className="flex items-center gap-8">
           <span className="text-xl font-black tracking-tight text-black dark:text-white uppercase transition-colors">

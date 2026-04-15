@@ -14,10 +14,6 @@ const Hero = () => {
       {/* HERO SECTION */}
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center mt-12 mb-24 z-10">
         <div className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] text-black dark:text-white text-xs font-bold uppercase tracking-widest mb-8 shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)] transition-colors">
-            v2.0 Architectural Update
-          </div>
-
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 text-black dark:text-white uppercase transition-colors">
             Save Anything.
             <br />
@@ -39,9 +35,6 @@ const Hero = () => {
               <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
                 arrow_forward
               </span>
-            </button>
-            <button className="px-8 py-4 bg-[#f5f5f5] dark:bg-[#0a0a0a] text-black dark:text-white border-2 border-black dark:border-white font-black text-lg hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0_0_rgba(255,255,255,1)] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none">
-              View Demo
             </button>
           </div>
         </div>
@@ -89,7 +82,7 @@ const Hero = () => {
           {/* Feature 1 */}
           <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div className="absolute top-0 right-0 w-32 h-32 halftone-bg opacity-20 dark:opacity-10 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-500"></div>
-            <span className="material-symbols-outlined text-black dark:text-white text-4xl mb-6 transition-colors">
+            <span className="material-symbols-outlined text-black dark:text-white text-6xl mb-6 transition-colors">
               save
             </span>
             <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 transition-colors">
@@ -106,7 +99,7 @@ const Hero = () => {
           {/* Feature 2 */}
           <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] relative overflow-hidden group hover:-translate-y-1 transition-all">
             <div className="absolute bottom-0 left-0 w-full h-1/3 halftone-bg opacity-10 dark:opacity-[0.05] border-t-2 border-dashed border-black dark:border-white pointer-events-none group-hover:-translate-y-4 transition-transform duration-500"></div>
-            <span className="material-symbols-outlined text-black dark:text-white text-4xl mb-6 transition-colors">
+            <span className="material-symbols-outlined text-black dark:text-white text-6xl mb-6 transition-colors">
               folder_open
             </span>
             <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 transition-colors">
@@ -122,16 +115,15 @@ const Hero = () => {
 
           {/* Feature 3 */}
           <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,1)] relative overflow-hidden group hover:-translate-y-1 transition-all">
-            {/* Dotted Border Accent */}
-            <div className="absolute inset-2 border-[3px] border-dotted border-black dark:border-white opacity-20 pointer-events-none"></div>
-            <span className="material-symbols-outlined text-black dark:text-white text-4xl mb-6 relative z-10 transition-colors">
+            <div className="absolute bottom-0 right-0 w-32 h-32 halftone-bg opacity-20 dark:opacity-10 rounded-tl-full pointer-events-none group-hover:scale-125 transition-transform duration-500"></div>
+            <span className="material-symbols-outlined text-black dark:text-white text-6xl mb-6 transition-colors">
               sell
             </span>
-            <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 relative z-10 transition-colors">
+            <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight mb-3 transition-colors">
               Add Notes
               <br />& Tags
             </h3>
-            <p className="text-gray-500 dark:text-gray-400 font-medium relative z-10 transition-colors">
+            <p className="text-gray-500 dark:text-gray-400 font-medium transition-colors">
               Enrich your saved items with personal context. Tag extensively for
               lightning-fast semantic search.
             </p>

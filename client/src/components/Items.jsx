@@ -70,7 +70,7 @@ export default function Items({
       <div className="absolute inset-0 halftone-bg opacity-30 dark:opacity-10 pointer-events-none"></div>
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-3xl bg-[#f5f5f5] dark:bg-[#0a0a0a] border-[3px] border-black dark:border-white shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)] flex flex-col max-h-[85vh] overflow-hidden z-20">
+      <div className="relative w-full max-w-8xl bg-[#f5f5f5] dark:bg-[#0a0a0a] border-[3px] border-black dark:border-white shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)] flex flex-col max-h-[95vh] overflow-hidden z-20">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b-[3px] border-black dark:border-white bg-[#e0e0e0] dark:bg-[#111111]">
           <div className="flex items-center gap-3">
@@ -114,94 +114,95 @@ export default function Items({
         </div>
 
         {/* Modal Body (Scrollable) */}
-        <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-6 space-y-6 bg-[#f5f5f5] dark:bg-[#0a0a0a]">
-          {/* Content / Title Area */}
-          <section>
-            <div className="flex items-center justify-between mb-2 border-b-2 border-black dark:border-white pb-1.5">
-              <span className="text-xs font-black uppercase tracking-widest text-black dark:text-white">
-                Content / Source
-              </span>
-              <button
-                onClick={() => navigator.clipboard.writeText(content)}
-                className="flex items-center gap-1 px-2 py-1 border-2 border-black dark:border-white text-[9px] font-black uppercase tracking-widest text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-[#f5f5f5] dark:hover:text-[#0a0a0a] transition-all focus:outline-none"
-              >
-                <span className="material-symbols-outlined text-[14px]">
-                  content_copy
+        <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-6 bg-[#f5f5f5] dark:bg-[#0a0a0a]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[55vh]">
+            <section className="lg:col-span-8 flex flex-col">
+              <div className="flex items-center justify-between mb-2 border-b-2 border-black dark:border-white pb-1.5">
+                <span className="text-xs font-black uppercase tracking-widest text-black dark:text-white">
+                  Content / Source
                 </span>
-                Copy
-              </button>
-            </div>
-            <div className="bg-[#f5f5f5] dark:bg-[#0a0a0a] p-3 font-mono text-xs leading-relaxed text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)]">
-              <textarea
-                className="w-full bg-transparent border-none focus:ring-0 resize-y outline-none min-h-[80px] font-bold py-1"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-              />
-            </div>
-          </section>
-
-          {/* Two Column Layout for Notes & Metadata */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            {/* Notes Section */}
-            <div className="col-span-1 md:col-span-8">
-              <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
-                Internal Notes
-              </label>
-              <div className="relative group bg-[#e0e0e0] dark:bg-[#111111] border-2 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)]">
-                <textarea
-                  className="w-full bg-transparent border-none focus:ring-0 p-3 text-xs font-bold leading-relaxed text-black dark:text-white min-h-[140px] placeholder:text-gray-500 dark:placeholder:text-gray-600 outline-none resize-y py-2"
-                  placeholder="ADD OBSERVATIONS OR ARCHITECTURAL NOTES..."
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                ></textarea>
-                <div className="absolute inset-0 halftone-bg opacity-20 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen"></div>
+                <button
+                  onClick={() => navigator.clipboard.writeText(content)}
+                  className="flex items-center gap-1 px-2 py-1 border-2 border-black dark:border-white text-[9px] font-black uppercase tracking-widest text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-[#f5f5f5] dark:hover:text-[#0a0a0a] transition-all focus:outline-none"
+                >
+                  <span className="material-symbols-outlined text-[14px]">
+                    content_copy
+                  </span>
+                  Copy
+                </button>
               </div>
-            </div>
+              <div className="flex-1 flex flex-col bg-[#f5f5f5] dark:bg-[#0a0a0a] p-3 font-mono text-xs leading-relaxed text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)]">
+                <textarea
+                  className="w-full flex-1 bg-transparent border-none focus:ring-0 resize-none outline-none min-h-[350px] font-bold py-1"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                />
+              </div>
+            </section>
 
-            {/* Metadata Section */}
-            <div className="col-span-1 md:col-span-4 space-y-6">
-              <div>
+            {/* Sub Content Area (Right Column) */}
+            <div className="lg:col-span-4 flex flex-col space-y-6">
+              {/* Notes Section */}
+              <div className="flex flex-col flex-1">
                 <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
-                  System Info
+                  Internal Notes
                 </label>
-                <div className="space-y-3">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[9px] uppercase font-black tracking-widest text-gray-500 dark:text-gray-500">
-                      Record ID
-                    </span>
-                    <span className="text-[10px] font-mono font-bold text-black dark:text-white truncate bg-[#e0e0e0] dark:bg-[#1a1a1a] p-1.5 border-2 border-black dark:border-white">
-                      {item._id}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[9px] uppercase font-black tracking-widest text-gray-500 dark:text-gray-500">
-                      Item Type
-                    </span>
-                    <span className="text-[10px] font-mono font-bold text-black dark:text-white uppercase p-1.5 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a]">
-                      {item.type}
-                    </span>
-                  </div>
+                <div className="relative group flex-1 flex flex-col bg-[#e0e0e0] dark:bg-[#111111] border-2 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)]">
+                  <textarea
+                    className="w-full flex-1 bg-transparent border-none focus:ring-0 p-3 text-xs font-bold leading-relaxed text-black dark:text-white min-h-[140px] placeholder:text-gray-500 dark:placeholder:text-gray-600 outline-none resize-none py-2"
+                    placeholder="ADD OBSERVATIONS OR ARCHITECTURAL NOTES..."
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  ></textarea>
+                  <div className="absolute inset-0 halftone-bg opacity-20 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen"></div>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
-                  Tags
-                </label>
-                <div className="flex flex-wrap gap-1.5">
-                  {(item.tags || []).map((t, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-1 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white"
-                    >
-                      {t.toUpperCase()}
-                    </span>
-                  ))}
-                  {(!item.tags || item.tags.length === 0) && (
-                    <span className="text-[10px] font-bold text-gray-500 dark:text-gray-500 uppercase tracking-widest">
-                      No tags
-                    </span>
-                  )}
+              {/* Metadata Section */}
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
+                    System Info
+                  </label>
+                  <div className="space-y-3">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[9px] uppercase font-black tracking-widest text-gray-500 dark:text-gray-500">
+                        Record ID
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-black dark:text-white truncate bg-[#e0e0e0] dark:bg-[#1a1a1a] p-1.5 border-2 border-black dark:border-white">
+                        {item._id}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[9px] uppercase font-black tracking-widest text-gray-500 dark:text-gray-500">
+                        Item Type
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-black dark:text-white uppercase p-1.5 border-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a]">
+                        {item.type}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-black dark:text-white mb-2 border-b-2 border-black dark:border-white pb-1.5">
+                    Tags
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(item.tags || []).map((t, idx) => (
+                      <span
+                        key={idx}
+                        className="px-2 py-1 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white"
+                      >
+                        {t.toUpperCase()}
+                      </span>
+                    ))}
+                    {(!item.tags || item.tags.length === 0) && (
+                      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-500 uppercase tracking-widest">
+                        No tags
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

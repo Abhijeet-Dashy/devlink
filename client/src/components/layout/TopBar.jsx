@@ -7,7 +7,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="h-[56px] w-[calc(100%-2rem)] max-w-4xl mx-auto mt-6 mb-4 rounded-full bg-white/70 dark:bg-[#222222]/80 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-between px-6 shrink-0 transition-all duration-300 z-50 self-center">
+    <header className="h-[56px] w-[calc(100%-2rem)] max-w-4xl mx-auto mt-6 mb-4 rounded-full bg-white/50 dark:bg-[#222222]/60 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-between px-6 shrink-0 transition-all duration-300 z-50 self-center backdrop-blur-xl">
       {/* Breadcrumbs */}
       <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 font-medium">
         <div className="px-1.5 py-1 rounded hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors flex items-center gap-2">
@@ -21,7 +21,6 @@ export default function TopBar() {
         </div>
       </div>
 
-      {/* Right Actions */}
       <div className="flex items-center gap-0.5">
         <button
           className="px-2 py-1 text-sm text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-colors mr-2"
