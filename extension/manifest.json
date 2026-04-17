@@ -4,8 +4,7 @@
   "version": "1.0",
   "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
   "host_permissions": [
-    "http://localhost:5000/*",
-    "http://localhost:5173/*"
+    "https://devlink-v9e2.onrender.com/*"
   ],
   "background": {
     "service_worker": "background.js"

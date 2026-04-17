@@ -3,7 +3,12 @@ import cors from 'cors';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: true,           // reflect request origin — works for chrome-extension:// too
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 
 import folderRoutes from "./routes/folder.routes.js";

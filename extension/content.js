@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5173/api";
+const API_URL = "https://devlink-v9e2.onrender.com/api";
 let toastTimeout;
 
 document.addEventListener("copy", async () => {

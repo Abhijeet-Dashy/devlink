@@ -33,7 +33,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "GET_FOLDERS") {
-    fetch("http://localhost:5173/api/folders", {
+    fetch("https://devlink-v9e2.onrender.com/api/folders", {
       headers: { "Authorization": `Bearer ${request.token}` }
     })
     .then(res => res.json())
@@ -43,7 +43,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   
   if (request.action === "POST_ITEM") {
-    fetch("http://localhost:5173/api/items", {
+    fetch("https://devlink-v9e2.onrender.com/api/items", {
       method: "POST",
       headers: { 
         "Authorization": `Bearer ${request.token}`,

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const API_URL = "http://localhost:5173/api";
+  const API_URL = "https://devlink-v9e2.onrender.com/api";
   
   // elements
   const loader = document.getElementById("loader");
@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const showStatus = (msg, isError = false) => {
     saveStatus.textContent = msg;
-    saveStatus.classList.remove("hidden", "text-black", "text-red-600", "text-green-600");
-    saveStatus.classList.add(isError ? "text-red-600" : "text-green-600");
+    saveStatus.classList.remove("hidden", "status-success", "status-error");
+    saveStatus.classList.add(isError ? "status-error" : "status-success");
     setTimeout(() => saveStatus.classList.add("hidden"), 3000);
   };
 
