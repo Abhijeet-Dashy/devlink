@@ -8,8 +8,8 @@ document.addEventListener("copy", async () => {
            const selection = document.getSelection().toString().trim();
            if (!selection) return;
            
-           // Check if DevLink Extension is Authenticated
-           const { token } = await chrome.storage.local.get("token");
+            // Check if DevLink Extension is Authenticated
+           const { token, lastUsedFolderId } = await chrome.storage.local.get(["token", "lastUsedFolderId"]);
 
             // Stash locally in case they open popup instead
            chrome.storage.local.set({ copiedData: selection, copiedType: "text" });
@@ -17,14 +17,20 @@ document.addEventListener("copy", async () => {
            // Inject Floating Prompt
            const selectionObj = document.getSelection();
            const rect = selectionObj.rangeCount > 0 ? selectionObj.getRangeAt(0).getBoundingClientRect() : null;
-           showDevLinkToast(selection, token || null, rect);
+           showDevLinkToast(selection, token || null, lastUsedFolderId || null, rect);
        } catch(error) { 
            console.warn("DevLink Auto-Capture Error", error); 
        }
     }, 50);
 });
 
-function showDevLinkToast(text, token, rect) {
+const detectType = (text) => {
+   if (text.startsWith("http://") || text.startsWith("https://")) return "link";
+   if (text.includes("function") || text.includes("{") || text.includes("const ") || text.includes("let ")) return "code";
+   return "text";
+};
+
+function showDevLinkToast(text, token, lastUsedFolderId, rect) {
    // Remove any existing toast
    const existing = document.getElementById("devlink-toast-host");
    if (existing) existing.remove();
@@ -193,6 +199,13 @@ function showDevLinkToast(text, token, rect) {
                opt.textContent = f.name;
                folderSelect.appendChild(opt);
             });
+            
+            if (lastUsedFolderId && data.data.some(f => f._id === lastUsedFolderId)) {
+                folderSelect.value = lastUsedFolderId;
+            } else {
+                folderSelect.value = data.data[0]._id;
+            }
+            
             initialBtn.textContent = "LINKED";
          } else {
             throw new Error();
@@ -215,7 +228,7 @@ function showDevLinkToast(text, token, rect) {
                token,
                payload: {
                  content: text,
-                 type: "text",
+                 type: detectType(text),
                  folderId: folderSelect.value
                }
            });
@@ -224,6 +237,9 @@ function showDevLinkToast(text, token, rect) {
                commitBtn.textContent = "DATA SECURED.";
                commitBtn.style.background = "#fff";
                commitBtn.style.color = "#000";
+               
+               // Save last used folder ID
+               await chrome.storage.local.set({ lastUsedFolderId: folderSelect.value });
                
                // Clear the chrome storage since we used it
                await chrome.storage.local.remove(["copiedData", "copiedType"]);

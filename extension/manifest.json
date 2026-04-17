@@ -4,7 +4,8 @@
   "version": "1.0",
   "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
   "host_permissions": [
-    "https://devlink-v9e2.onrender.com/*"
+    "https://devlink-v9e2.onrender.com/*",
+    "https://devlink-mauve.vercel.app/*"
   ],
   "background": {
     "service_worker": "background.js"

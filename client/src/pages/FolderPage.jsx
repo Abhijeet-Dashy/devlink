@@ -21,6 +21,16 @@ export default function FolderPage() {
   const [folders, setFolders] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle("dark");
   };
@@ -38,7 +48,10 @@ export default function FolderPage() {
 
         // Fetch items for current folder
         if (folderId) {
-          const iRes = await authFetch(`/api/items?folderId=${folderId}`);
+          const params = new URLSearchParams({ folderId });
+          if (debouncedSearch) params.append("search", debouncedSearch);
+
+          const iRes = await authFetch(`/api/items?${params.toString()}`);
           const iData = await iRes.json();
           if (iData.success) {
             setItems(iData.data);
@@ -51,10 +64,25 @@ export default function FolderPage() {
       }
     };
     initData();
-  }, [folderId, authFetch]);
+  }, [folderId, authFetch, debouncedSearch]);
 
   const handleAddItem = () => {
     setIsNewItemModalOpen(true);
+  };
+
+  const toggleFavorite = async (e, item) => {
+    e.stopPropagation();
+    try {
+      const res = await authFetch(`/api/items/${item._id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ isFavorite: !item.isFavorite }),
+      });
+      if (res.ok) {
+        setItems(items.map(i => i._id === item._id ? { ...i, isFavorite: !item.isFavorite } : i));
+      }
+    } catch(err) {
+      console.error(err);
+    }
   };
 
   const activeFolder = folders.find((f) => f._id === folderId);
@@ -164,6 +192,8 @@ export default function FolderPage() {
                 className="w-full bg-[#e5e5e5] dark:bg-[#1a1a1a] border-2 border-black dark:border-white pl-9 pr-3 py-1.5 text-xs font-bold text-black dark:text-white focus:bg-white dark:focus:bg-black focus:shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0_0_rgba(255,255,255,1)] placeholder:text-gray-500 outline-none transition-all uppercase tracking-widest"
                 placeholder="Index query..."
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
@@ -295,6 +325,8 @@ export default function FolderPage() {
                   title={item.content}
                   description={item.note || ""}
                   tags={item.tags || []}
+                  isFavorite={item.isFavorite}
+                  onToggleFavorite={(e) => toggleFavorite(e, item)}
                   imageSrc={item.type === "image" ? item.sourceUrl : null}
                   onClick={() => setSelectedItem(item)}
                 />

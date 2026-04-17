@@ -47,6 +47,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => saveStatus.classList.add("hidden"), 3000);
   };
 
+  const detectType = (text) => {
+    if (text.startsWith("http://") || text.startsWith("https://")) return "link";
+    if (text.includes("function") || text.includes("{") || text.includes("const ") || text.includes("let ")) return "code";
+    return "text";
+  };
+
   // Initialize
   const initialize = async () => {
     showView("loader");
@@ -82,10 +88,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(data.data.length > 0) folderSelect.value = data.data[0]._id; // default to first
 
         // Buffer Copied Data
-        const { copiedData, copiedType } = await chrome.storage.local.get(["copiedData", "copiedType"]);
+        const { copiedData, copiedType, lastUsedFolderId } = await chrome.storage.local.get(["copiedData", "copiedType", "lastUsedFolderId"]);
+        
+        if (lastUsedFolderId && data.data.some(f => f._id === lastUsedFolderId)) {
+          folderSelect.value = lastUsedFolderId;
+        } else if (data.data.length > 0) {
+          folderSelect.value = data.data[0]._id; // default to first
+        }
+
         if (copiedData) {
            contentInput.value = copiedData;
-           if(copiedType) typeSelect.value = copiedType;
+           typeSelect.value = copiedType || detectType(copiedData);
         }
 
         showView("workspace");
@@ -163,6 +176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await res.json();
       if(data.success) {
         showStatus("PAYLOAD SECURED");
+        await chrome.storage.local.set({ lastUsedFolderId: folderSelect.value });
         contentInput.value = "";
         noteInput.value = "";
         await chrome.storage.local.remove(["copiedData", "copiedType"]);

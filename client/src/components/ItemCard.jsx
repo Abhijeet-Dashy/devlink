@@ -11,6 +11,8 @@ const ItemCard = memo(function ItemCard({
   className = "",
   children,
   onClick,
+  isFavorite = false,
+  onToggleFavorite,
 }) {
   return (
     <div
@@ -36,13 +38,23 @@ const ItemCard = memo(function ItemCard({
             <div className="absolute inset-0 halftone-bg opacity-30 dark:opacity-20 mix-blend-color-burn dark:mix-blend-screen pointer-events-none group-hover:opacity-0 transition-opacity duration-300"></div>
           </div>
           <div className="p-3 flex-1 flex flex-col">
-            <div className="flex justify-between items-start mb-1.5">
-              <h3 className="text-sm font-black text-black dark:text-white uppercase tracking-tight line-clamp-1">
+            <div className="flex justify-between items-start mb-1.5 gap-2">
+              <h3 className="text-sm font-black text-black dark:text-white uppercase tracking-tight line-clamp-1 flex-1">
                 {title}
               </h3>
-              <span className="material-symbols-outlined text-black dark:text-white text-[12px] bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white px-0.5">
-                link
-              </span>
+              <div className="flex gap-1 items-center">
+                <button
+                  onClick={onToggleFavorite}
+                  className={`hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black flex items-center justify-center border border-transparent hover:border-black dark:hover:border-white transition-colors relative z-20 ${isFavorite ? "text-yellow-500" : "text-gray-400 dark:text-gray-500"}`}
+                >
+                  <span className="material-symbols-outlined text-[14px]" style={isFavorite ? {fontVariationSettings: "'FILL' 1"} : {}}>
+                    star
+                  </span>
+                </button>
+                <span className="material-symbols-outlined text-black dark:text-white text-[12px] bg-[#f5f5f5] dark:bg-[#0a0a0a] border-2 border-black dark:border-white px-0.5">
+                  link
+                </span>
+              </div>
             </div>
             {description && (
               <p className="text-[10px] font-bold text-gray-600 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed">
@@ -78,14 +90,24 @@ const ItemCard = memo(function ItemCard({
                 </span>
               </div>
               {!splitNode && (
-                <button
-                  onClick={(e) => e.stopPropagation()}
-                  className="text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-transparent hover:border-black dark:hover:border-white transition-colors relative z-20 px-0.5 py-0"
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    more_horiz
-                  </span>
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={onToggleFavorite}
+                    className={`hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-transparent hover:border-black dark:hover:border-white transition-colors relative z-20 px-0.5 py-0 ${isFavorite ? "text-yellow-500" : "text-gray-400 dark:text-gray-500"}`}
+                  >
+                    <span className="material-symbols-outlined text-sm" style={isFavorite ? {fontVariationSettings: "'FILL' 1"} : {}}>
+                      star
+                    </span>
+                  </button>
+                  <button
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-transparent hover:border-black dark:hover:border-white transition-colors relative z-20 px-0.5 py-0"
+                  >
+                    <span className="material-symbols-outlined text-sm">
+                      more_horiz
+                    </span>
+                  </button>
+                </div>
               )}
             </div>
 

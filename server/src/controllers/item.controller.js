@@ -21,13 +21,32 @@ export const createItem = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Folder not found");
   }
 
+  let activeTags = tags || [];
+  const textContent = `${content} ${note || ""}`.toLowerCase();
+  const keywordMap = {
+    react: "react", css: "css", html: "html",
+    javascript: "js", js: "js", typescript: "ts", ts: "ts",
+    python: "python", java: "java", cpp: "cpp", sql: "sql",
+    node: "nodejs", express: "express", mongodb: "mongodb",
+    api: "api", rest: "api", graphql: "graphql",
+    dsa: "dsa", leetcode: "dsa", algo: "dsa", algorithm: "dsa",
+    frontend: "frontend", backend: "backend", design: "design",
+    ui: "ui", ux: "ux", docker: "docker", aws: "aws", git: "git"
+  };
+
+  Object.entries(keywordMap).forEach(([keyword, tag]) => {
+    if (textContent.includes(keyword) && !activeTags.includes(tag)) {
+      activeTags.push(tag);
+    }
+  });
+
   const item = await Item.create({
     userId: req.user._id,
     folderId,
     content,
     type,
     note,
-    tags,
+    tags: activeTags,
     sourceUrl,
   });
 
@@ -35,11 +54,23 @@ export const createItem = asyncHandler(async (req, res) => {
 });
 
 export const getItems = asyncHandler(async (req, res) => {
-  const { folderId } = req.query;
+  const { folderId, search, favorites } = req.query;
 
   const query = { userId: req.user._id };
   if (folderId) {
     query.folderId = folderId;
+  }
+  
+  if (favorites === 'true') {
+    query.isFavorite = true;
+  }
+
+  if (search) {
+    query.$or = [
+      { content: { $regex: search, $options: "i" } },
+      { note: { $regex: search, $options: "i" } },
+      { tags: { $in: [search.toLowerCase()] } },
+    ];
   }
 
   const items = await Item.find(query).sort({ createdAt: -1 });
@@ -64,9 +95,13 @@ export const deleteItem = asyncHandler(async (req, res) => {
 
 export const updateItem = asyncHandler(async (req, res) => {
   const { itemId } = req.params;
-  const { content, note, tags, folderId, sourceUrl } = req.body;
+  const { content, note, tags, folderId, sourceUrl, isFavorite } = req.body;
 
   let updateFields = { content, note, tags, sourceUrl };
+
+  if (isFavorite !== undefined) {
+    updateFields.isFavorite = isFavorite;
+  }
 
   if (folderId) {
     const folder = await Folder.findOne({

@@ -40,6 +40,11 @@ const itemSchema = new mongoose.Schema(
         type: String,
       },
     ],
+
+    isFavorite: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

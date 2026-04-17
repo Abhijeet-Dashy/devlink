@@ -15,13 +15,29 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+        const params = new URLSearchParams();
+        if (debouncedSearch) params.append("search", debouncedSearch);
+        if (filter === "favorites") params.append("favorites", "true");
+
         const [fRes, iRes] = await Promise.all([
           authFetch("/api/folders"),
-          authFetch("/api/items"),
+          authFetch(`/api/items?${params.toString()}`),
         ]);
         const fData = await fRes.json();
         const iData = await iRes.json();
@@ -42,6 +58,21 @@ export default function Dashboard() {
 
   const handleNewFolder = () => {
     setIsNewFolderModalOpen(true);
+  };
+
+  const toggleFavorite = async (e, item) => {
+    e.stopPropagation();
+    try {
+      const res = await authFetch(`/api/items/${item._id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ isFavorite: !item.isFavorite }),
+      });
+      if (res.ok) {
+        setItems(items.map(i => i._id === item._id ? { ...i, isFavorite: !item.isFavorite } : i));
+      }
+    } catch(err) {
+      console.error(err);
+    }
   };
 
   const toggleDarkMode = () => {
@@ -76,20 +107,47 @@ export default function Dashboard() {
 
         {/* Navigation Links */}
         <nav className="flex-1 flex flex-col gap-1.5 mt-4 overflow-y-auto px-1">
-          <Link
-            className="bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)] px-3 py-2 flex items-center gap-2.5 transition-colors"
-            to="/dashboard"
+          <button
+            onClick={() => setFilter("all")}
+            className={`text-left px-3 py-2 flex items-center gap-2.5 transition-colors border-2 ${
+              filter === "all" ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)]" : "text-gray-600 dark:text-gray-400 border-transparent hover:text-black dark:hover:text-[#0a0a0a] hover:bg-black/5 dark:hover:bg-white"
+            }`}
           >
-            <span
-              className="material-symbols-outlined text-[18px]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
+            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
               grid_view
             </span>
             <span className="text-[11px] font-black uppercase tracking-widest">
               Dashboard
             </span>
-          </Link>
+          </button>
+
+          <button
+            onClick={() => setFilter("favorites")}
+            className={`text-left px-3 py-2 flex items-center gap-2.5 transition-colors border-2 ${
+              filter === "favorites" ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)]" : "text-gray-600 dark:text-gray-400 border-transparent hover:text-black dark:hover:text-[#0a0a0a] hover:bg-black/5 dark:hover:bg-white"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[18px]">
+              star
+            </span>
+            <span className="text-[11px] font-black uppercase tracking-widest">
+              Favorites
+            </span>
+          </button>
+          
+          <button
+            onClick={() => setFilter("recent")}
+            className={`text-left px-3 py-2 flex items-center gap-2.5 transition-colors border-2 ${
+              filter === "recent" ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,1)]" : "text-gray-600 dark:text-gray-400 border-transparent hover:text-black dark:hover:text-[#0a0a0a] hover:bg-black/5 dark:hover:bg-white"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[18px]">
+              history
+            </span>
+            <span className="text-[11px] font-black uppercase tracking-widest">
+              Recent
+            </span>
+          </button>
 
           <div className="h-3 border-l-2 border-black dark:border-white ml-5 my-1 opacity-20"></div>
 
@@ -156,6 +214,8 @@ export default function Dashboard() {
                 className="w-full bg-[#e5e5e5] dark:bg-[#1a1a1a] border-2 border-black dark:border-white pl-9 pr-3 py-1.5 text-xs font-bold text-black dark:text-white focus:bg-white dark:focus:bg-black focus:shadow-[3px_3px_0_0_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0_0_rgba(255,255,255,1)] placeholder:text-gray-500 outline-none transition-all uppercase tracking-widest"
                 placeholder="Index query..."
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
@@ -207,7 +267,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
-                {items.map((item, idx) => {
+                {(filter === 'recent' ? items.slice(0, 10) : items).map((item, idx) => {
                   const folder = folders.find((f) => f._id === item.folderId);
                   return (
                     <ItemCard
@@ -233,6 +293,8 @@ export default function Dashboard() {
                           ? [folder.name, ...(item.tags || [])]
                           : item.tags || []
                       }
+                      isFavorite={item.isFavorite}
+                      onToggleFavorite={(e) => toggleFavorite(e, item)}
                       imageSrc={item.type === "image" ? item.sourceUrl : null}
                       onClick={() => setSelectedItem(item)}
                     />
