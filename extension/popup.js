@@ -90,11 +90,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Buffer Copied Data
         const { copiedData, copiedType, lastUsedFolderId } = await chrome.storage.local.get(["copiedData", "copiedType", "lastUsedFolderId"]);
         
+        const updateCommitBtnText = () => {
+          if (folderSelect.value && folderSelect.value === lastUsedFolderId) {
+            const folderName = data.data.find(f => f._id === lastUsedFolderId)?.name || "";
+            commitBtn.textContent = folderName ? `QUICK SAVE: ${folderName.toUpperCase()}` : "COMMIT FRAGMENT";
+          } else {
+            commitBtn.textContent = "COMMIT FRAGMENT";
+          }
+        };
+
         if (lastUsedFolderId && data.data.some(f => f._id === lastUsedFolderId)) {
           folderSelect.value = lastUsedFolderId;
         } else if (data.data.length > 0) {
           folderSelect.value = data.data[0]._id; // default to first
         }
+
+        updateCommitBtnText();
+        folderSelect.addEventListener("change", updateCommitBtnText);
 
         if (copiedData) {
            contentInput.value = copiedData;

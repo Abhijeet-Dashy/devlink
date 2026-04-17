@@ -200,11 +200,23 @@ function showDevLinkToast(text, token, lastUsedFolderId, rect) {
                folderSelect.appendChild(opt);
             });
             
+            const updateCommitBtnText = () => {
+                if (folderSelect.value && folderSelect.value === lastUsedFolderId) {
+                    const fname = data.data.find(f => f._id === lastUsedFolderId)?.name || "";
+                    commitBtn.textContent = fname ? `QUICK SAVE: ${fname.toUpperCase().substring(0, 10)}${fname.length > 10 ? '...' : ''}` : "COMMIT BLOCK";
+                } else {
+                    commitBtn.textContent = "COMMIT BLOCK";
+                }
+            };
+
             if (lastUsedFolderId && data.data.some(f => f._id === lastUsedFolderId)) {
                 folderSelect.value = lastUsedFolderId;
             } else {
                 folderSelect.value = data.data[0]._id;
             }
+            
+            updateCommitBtnText();
+            folderSelect.addEventListener("change", updateCommitBtnText);
             
             initialBtn.textContent = "LINKED";
          } else {
