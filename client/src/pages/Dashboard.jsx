@@ -54,7 +54,7 @@ export default function Dashboard() {
       }
     };
     fetchData();
-  }, [authFetch]);
+  }, [authFetch, debouncedSearch, filter]);
 
   const handleNewFolder = () => {
     setIsNewFolderModalOpen(true);
