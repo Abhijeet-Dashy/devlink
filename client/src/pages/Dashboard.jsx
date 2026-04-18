@@ -204,7 +204,7 @@ export default function Dashboard() {
 
       <main className="flex-1 md:ml-64 flex flex-col h-screen overflow-y-auto relative z-10">
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 md:left-64 z-40 h-14 flex justify-between items-center px-6 border-b-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] transition-colors">
+        <header className="fixed top-0 left-0 right-0 md:left-64 z-40 h-14 flex justify-between items-center px-4 sm:px-6 border-b-2 border-black dark:border-white bg-[#f5f5f5] dark:bg-[#0a0a0a] transition-colors">
           <div className="flex items-center gap-3 flex-1">
             <div className="relative w-full max-w-[280px]">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-lg">

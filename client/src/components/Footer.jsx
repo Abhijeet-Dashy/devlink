@@ -6,8 +6,8 @@ const Footer = () => {
       {/* Optional faint halftone over the black bg */}
       <div className="absolute inset-0 halftone-bg opacity-10 mix-blend-screen pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-12 relative z-10">
-        <div className="col-span-2">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-12 relative z-10">
+        <div className="col-span-1 sm:col-span-2 md:col-span-2">
           <span className="text-3xl font-black tracking-tighter uppercase mb-4 inline-block border-2 border-[#f5f5f5] dark:border-white px-2 py-1 bg-black dark:bg-[#1a1a1a] shadow-[4px_4px_0_0_rgba(245,245,245,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] transition-colors">
             DevLink
           </span>

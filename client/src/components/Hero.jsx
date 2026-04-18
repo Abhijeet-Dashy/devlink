@@ -14,7 +14,7 @@ const Hero = () => {
       {/* HERO SECTION */}
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center mt-12 mb-24 z-10">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 text-black dark:text-white uppercase transition-colors">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 text-black dark:text-white uppercase transition-colors">
             Save Anything.
             <br />
             Organize Everything.
@@ -29,7 +29,7 @@ const Hero = () => {
           <div className="flex flex-wrap justify-center gap-6">
             <button
               onClick={() => navigate("/register")}
-              className="px-8 py-4 bg-black dark:bg-white text-[#f5f5f5] dark:text-black border-2 border-black dark:border-white font-black text-lg hover:bg-[#f5f5f5] hover:text-black dark:hover:bg-[#0a0a0a] dark:hover:text-white hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0_0_rgba(255,255,255,1)] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none flex items-center gap-2 group"
+              className="px-6 py-3 sm:px-8 sm:py-4 bg-black dark:bg-white text-[#f5f5f5] dark:text-black border-2 border-black dark:border-white font-black text-base sm:text-lg hover:bg-[#f5f5f5] hover:text-black dark:hover:bg-[#0a0a0a] dark:hover:text-white hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0_0_rgba(255,255,255,1)] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none flex items-center gap-2 group"
             >
               Get Started
               <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
@@ -70,7 +70,7 @@ const Hero = () => {
       {/* FEATURES SECTION */}
       <section className="relative z-10 py-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-black dark:text-white uppercase mb-4 transition-colors">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-black dark:text-white uppercase mb-4 transition-colors">
             Total Command.
           </h2>
           <p className="text-gray-500 dark:text-gray-400 font-medium text-lg transition-colors">
